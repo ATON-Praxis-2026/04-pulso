@@ -1,8 +1,10 @@
 import { CONFIG } from "./config";
 
-export const MODEL = process.env.INTEREA_MODEL ?? "claude-opus-5";
+export const MODEL = process.env.PULSO_MODEL ?? "claude-opus-5";
 
-export const SISTEMA = `Você analisa conversas do WhatsApp da secretaria de uma escola.
+export const SISTEMA = `Você analisa conversas do WhatsApp da secretaria de um colégio
+particular de educação básica (K-12). De um lado a família — pai, mãe ou responsável.
+Do outro a secretaria.
 
 Você recebe o transcript de UMA conversa e devolve um JSON.
 
@@ -13,7 +15,8 @@ REGRAS QUE NÃO SE NEGOCIAM:
 2. Você NUNCA calcula tempo. Não diga "demorou", "há X dias", "rápido" ou "lento".
    Tempo é calculado em SQL fora daqui.
 3. Tema vem da lista fechada. Se nada servir, use "outros".
-4. Você não prevê saída de aluno. Você registra o que ele escreveu.
+4. Você não prevê saída de aluno. Você registra o que a família escreveu.
+5. A unidade é a FAMÍLIA, não o aluno. Dois filhos na escola são uma decisão.
 
 TEMAS (lista fechada): ${CONFIG.temas.join(" · ")}
 
@@ -21,17 +24,20 @@ TIPO DE CONTATO — reclamação é minoria do que entra, e o resto vale mais:
 - duvida: pergunta sobre algo que já existe
 - solicitacao: pede uma ação operacional
 - problema: algo deu errado
-- pedido_inexistente: pede o que a escola NÃO oferece (isto é DESEJO, não reclamação)
-- interesse_comercial: quer se matricular ou saber preço (isto é OPORTUNIDADE)
+- pedido_inexistente: pede o que a escola NÃO oferece — período integral, uma
+  atividade extra, transporte para um bairro. É desejo, não reclamação.
 - elogio
 - confusao: não entendeu algo que a escola comunicou
 
 SINAIS DE RISCO (só os que se comprovam com trecho literal):
-pediu_trancamento · dificuldade_financeira · reclamacao_repetida ·
-comparou_concorrente · frustracao_explicita · pergunta_repetida
+falou_em_sair · dificuldade_financeira · reclamacao_repetida ·
+comparou_outra_escola · frustracao_explicita · pergunta_repetida
+
+Sobre falou_em_sair: vale quando a família menciona trocar de escola, não
+rematricular, ou pedir transferência. Não vale para reclamação genérica.
 
 CAMPO evitavel: este contato precisava existir? Uma dúvida que já estaria
-respondida num texto público é evitável. Um pedido legítimo não é.`;
+respondida num comunicado ou no portal é evitável. Um pedido legítimo não é.`;
 
 export const SCHEMA = {
   type: "object",
@@ -40,13 +46,13 @@ export const SCHEMA = {
     tipo_contato: {
       type: "string",
       enum: ["duvida", "solicitacao", "problema", "pedido_inexistente",
-             "interesse_comercial", "elogio", "confusao"],
+             "elogio", "confusao"],
     },
     tema: { type: "string", enum: [...CONFIG.temas] },
     // minimum/maximum não são suportados em saída estruturada — enum resolve.
     severidade: { type: "integer", enum: [1, 2, 3, 4, 5] },
     evitavel: { type: "boolean" },
-    intencao_matricula: { type: "boolean" },
+    intencao_matricula: { type: "boolean", description: "sempre false; campo legado" },
     sentimento_final: { type: "string", enum: ["satisfeito", "neutro", "frustrado"] },
     sinais_risco: {
       type: "array",
@@ -55,8 +61,8 @@ export const SCHEMA = {
         properties: {
           sinal: {
             type: "string",
-            enum: ["pediu_trancamento", "dificuldade_financeira", "reclamacao_repetida",
-                   "comparou_concorrente", "frustracao_explicita", "pergunta_repetida"],
+            enum: ["falou_em_sair", "dificuldade_financeira", "reclamacao_repetida",
+                   "comparou_outra_escola", "frustracao_explicita", "pergunta_repetida"],
           },
           evidencia: { type: "string", description: "trecho LITERAL da conversa" },
         },
@@ -66,7 +72,7 @@ export const SCHEMA = {
     },
     mensagem_sugerida: {
       type: "string",
-      description: "rascunho curto para a secretaria enviar. Vazio se não houver pendência.",
+      description: "rascunho curto para a secretaria enviar à família. Vazio se não houver pendência.",
     },
   },
   required: ["resumo", "tipo_contato", "tema", "severidade", "evitavel",

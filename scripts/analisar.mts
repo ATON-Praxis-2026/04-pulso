@@ -9,7 +9,7 @@ import { anthropic } from "../lib/anthropic";
 import { DatabaseSync } from "node:sqlite";
 import { SISTEMA, SCHEMA, MODEL } from "../lib/prompt";
 
-const db = new DatabaseSync("data/interea.db");
+const db = new DatabaseSync("data/pulso.db");
 const client = anthropic();
 
 const arg = process.argv[2];
