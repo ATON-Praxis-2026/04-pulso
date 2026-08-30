@@ -37,8 +37,13 @@ function mensagemEnviada() {
 export default function Semana() {
   const todos = movimentos();
   const abertos = todos.filter((m) => m.estado !== "feito");
+  // A home é a lista de tarefas dele: o que ele já assumiu vem antes do que
+  // ainda nem olhou, e dentro de cada grupo o que não espera segunda lidera.
+  const porUrgencia = (a: typeof todos[0], b: typeof todos[0]) =>
+    (a.score?.urgencia === "agora" ? 0 : 1) - (b.score?.urgencia === "agora" ? 0 : 1);
+  const fazendo = abertos.filter((m) => m.estado === "fazendo").sort(porUrgencia);
+  const decidir = abertos.filter((m) => m.estado === "decidir").sort(porUrgencia);
   const agora = abertos.filter((m) => m.score?.urgencia === "agora");
-  const naSemana = abertos.filter((m) => m.score?.urgencia !== "agora");
   const resolvidos = todos.filter((m) => m.estado === "feito");
   const bons = positivos();
   const meses = mesesAteRematricula(AGORA);
@@ -109,29 +114,45 @@ export default function Semana() {
           </p>
         </section>
       ) : (
-        <section className="space-y-3">
-          <h2 className="rotulo !text-[var(--tinta-2)] px-2 pt-3">
-            {abertos.length === 1 ? "1 decisão para você" : `${abertos.length} decisões para você`}
-            {agora.length > 0 && (
-              <span className="!text-[#7a2f2f]"> · {agora.length} não {agora.length === 1 ? "esperou" : "esperaram"} segunda</span>
-            )}
-          </h2>
-          <div className="space-y-3">
-            {[...agora, ...naSemana].slice(0, 3).map((m) => <MovimentoCard key={m.chave} m={m} />)}
-          </div>
-          {abertos.length > 3 && (
-            <Link href="/decisoes" className="inline-block rotulo !text-[var(--tinta-2)]
-              hover:!text-[var(--tinta)] underline underline-offset-4 px-2 py-2">
-              ver as outras {abertos.length - 3}
-            </Link>
+        <div className="space-y-3">
+          {fazendo.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex items-baseline gap-3 px-2 pt-3">
+                <h2 className="rotulo !text-[var(--tinta)]">Em andamento</h2>
+                <span className="rotulo">{fazendo.length}</span>
+                <span className="rotulo opacity-60">você já assumiu</span>
+              </div>
+              {fazendo.map((m) => <MovimentoCard key={m.chave} m={m} />)}
+            </section>
           )}
-        </section>
+
+          {decidir.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex items-baseline gap-3 px-2 pt-3">
+                <h2 className="rotulo !text-[var(--tinta)]">Para decidir</h2>
+                <span className="rotulo">{decidir.length}</span>
+                {agora.length > 0 && (
+                  <span className="rotulo !text-[var(--coral)]">
+                    {agora.length} não {agora.length === 1 ? "esperou" : "esperaram"} segunda
+                  </span>
+                )}
+              </div>
+              {decidir.slice(0, 3).map((m) => <MovimentoCard key={m.chave} m={m} />)}
+              {decidir.length > 3 && (
+                <Link href="/decisoes" className="inline-block rotulo hover:!text-[var(--tinta)]
+                  underline underline-offset-4 px-2 py-2">
+                  ver as outras {decidir.length - 3} no quadro →
+                </Link>
+              )}
+            </section>
+          )}
+        </div>
       )}
 
       {resolvidos.length > 0 && (
-        <p className="rotulo !text-[var(--tinta-2)] px-2">
+        <p className="rotulo px-2 pt-2">
           <Link href="/decisoes" className="hover:!text-[var(--tinta)] underline underline-offset-4">
-            você já fechou {resolvidos.length} no quadro →
+            você já fechou {resolvidos.length} {resolvidos.length === 1 ? "tarefa" : "tarefas"} no quadro →
           </Link>
         </p>
       )}

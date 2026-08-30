@@ -32,10 +32,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {/* O preto é o vão entre os blocos, como na referência. */}
           <aside className="w-60 shrink-0 hidden md:flex flex-col gap-3">
             <div className="bg-[var(--coral)] rounded-[var(--radius)] px-6 py-5">
-              <Link href="/" className="text-[24px] tracking-[0.06em] text-[var(--tinta)] font-bold">
+              <Link href="/" className="text-[26px] leading-none font-normal
+                tracking-[0.22em] text-white block">
                 {PRODUTO.toUpperCase()}
               </Link>
-              <p className="rotulo !text-[var(--tinta)]/65 mt-1">
+              <p className="rotulo !text-white/70 mt-2.5">
                 {CONFIG.escola.toLowerCase()}
               </p>
             </div>
@@ -55,7 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="flex-1 min-w-0 flex flex-col gap-3">
             <header className="bg-[var(--creme)] rounded-[var(--radius)] px-6 sm:px-8 h-16
               flex items-center gap-4 shrink-0">
-              <Link href="/" className="md:hidden text-lg font-bold tracking-[0.06em]
+              <Link href="/" className="md:hidden text-lg font-normal tracking-[0.22em]
                 text-[var(--tinta)] shrink-0">{PRODUTO.toUpperCase()}</Link>
               <div className="hidden md:block min-w-0"><TituloDaPagina /></div>
               <span className="ml-auto rotulo flex items-center gap-2 shrink-0">
