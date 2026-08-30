@@ -82,13 +82,8 @@ export default async function Conversas({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-sm font-medium">{l.nome}</span>
-                    {l.tipo === "interessado" && (
-                      <span className="text-xs rounded px-1.5 py-0.5 bg-[#0ca30c]/20 text-[#0ca30c]">
-                        interessado
-                      </span>
-                    )}
                     {!l.respondida && (
-                      <span className="text-xs rounded px-1.5 py-0.5 bg-[#fab219]/20 text-[#fab219]">
+                      <span className="text-xs rounded px-1.5 py-0.5 bg-[var(--ocre)] text-[var(--tinta)]">
                         sem resposta
                       </span>
                     )}

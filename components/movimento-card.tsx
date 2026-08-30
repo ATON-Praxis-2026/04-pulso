@@ -1,18 +1,17 @@
 import Link from "next/link";
 import { Copiar, Resolver } from "@/components/acoes";
 import { Etiqueta } from "@/components/marca";
-import { brl } from "@/lib/formato";
 import type { Movimento } from "@/lib/analytics";
 
 /** As etiquetas sólidas da referência, uma por tipo de decisão.
  *  Terracota, azul-céu, ocre e oliva — todas validadas em AA. */
 const TIPO: Record<Movimento["tipo"], { nome: string; fundo: string; tinta: string }> = {
-  recuperar:  { nome: "Recuperar",     fundo: "var(--terracota)", tinta: "#ffffff" },
-  abrir:      { nome: "Abrir",         fundo: "var(--ocre)",      tinta: "var(--tinta)" },
-  corrigir:   { nome: "Corrigir",      fundo: "var(--azul)",      tinta: "var(--tinta)" },
-  destravar:  { nome: "Destravar",     fundo: "var(--oliva)",     tinta: "#ffffff" },
-  estrutural: { nome: "Estrutural",    fundo: "var(--oliva)",     tinta: "#ffffff" },
-  manter:     { nome: "Manter",        fundo: "var(--verde)",     tinta: "#ffffff" },
+  avisar:     { nome: "Volte e avise",  fundo: "var(--verde)",     tinta: "#ffffff" },
+  corrigir:   { nome: "Corrigir",       fundo: "var(--azul)",      tinta: "var(--tinta)" },
+  estrutural: { nome: "Estrutural",     fundo: "var(--terracota)", tinta: "#ffffff" },
+  destravar:  { nome: "Destravar",      fundo: "var(--oliva)",     tinta: "#ffffff" },
+  abrir:      { nome: "Avaliar",        fundo: "var(--ocre)",      tinta: "var(--tinta)" },
+  manter:     { nome: "Não mexer",      fundo: "var(--verde)",     tinta: "#ffffff" },
 };
 
 export function MovimentoCard({ m, compacto = false }: { m: Movimento; compacto?: boolean }) {
@@ -21,7 +20,7 @@ export function MovimentoCard({ m, compacto = false }: { m: Movimento; compacto?
     <article className={`bg-card p-6 sm:p-7 ${m.resolvido ? "opacity-60" : ""}`}>
       <div className="flex items-center gap-3 mb-4">
         <Etiqueta fundo={t.fundo} tinta={t.tinta}>{t.nome}</Etiqueta>
-        <span className="rotulo">{m.pessoas} {m.unidade ?? "pessoas"}</span>
+        <span className="rotulo">{m.quantas} {m.unidade ?? "famílias"}</span>
         {m.resolvido && <span className="rotulo !text-[var(--verde)]">resolvido</span>}
       </div>
 
@@ -30,9 +29,7 @@ export function MovimentoCard({ m, compacto = false }: { m: Movimento; compacto?
           leading-[1.15] tracking-[-0.01em] flex-1 min-w-0">
           {m.titulo}
         </h3>
-        {m.valor ? (
-          <p className="font-mono text-lg tabular-nums shrink-0">{brl(m.valor)}</p>
-        ) : null}
+        
       </div>
 
       <p className="text-[17px] leading-relaxed text-muted-foreground max-w-[62ch]">

@@ -1,8 +1,7 @@
-import { temas, desejos } from "@/lib/queries";
-import { textoDoTema, VALOR_ALUNO } from "@/lib/analytics";
-import { Painel, Cabecalho, Tile } from "@/components/ui-bits";
+import { temas, desejos, textoDoTema } from "@/lib/queries";
+
+import { Painel, Cabecalho } from "@/components/ui-bits";
 import { Copiar } from "@/components/acoes";
-import { brl } from "@/lib/formato";
 import { BarrasH } from "@/components/charts";
 
 export const dynamic = "force-dynamic";
@@ -66,10 +65,6 @@ export default function Temas() {
                     </li>
                   ))}
                 </ul>
-                <div className="grid grid-cols-2 gap-3">
-                  <Tile valor={brl(d.n * VALOR_ALUNO)} rotulo="se todos entrassem" />
-                  <Tile valor={brl(d.n * VALOR_ALUNO * 0.3)} rotulo="a 30% de conversão" tom="bom" />
-                </div>
               </div>
             ) : <p className="text-sm text-muted-foreground">Nenhum pedido recorrente fora da oferta.</p>}
           </Painel>

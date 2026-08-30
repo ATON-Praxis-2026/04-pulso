@@ -3,7 +3,7 @@ import { temas } from "@/lib/queries";
 import { Tile, Painel, Cabecalho } from "@/components/ui-bits";
 import { AreaSemanal, BarrasH, BarrasV } from "@/components/charts";
 import { VIZ } from "@/lib/viz";
-import { brl, numero } from "@/lib/formato";
+import { numero } from "@/lib/formato";
 
 export const dynamic = "force-dynamic";
 
@@ -27,8 +27,8 @@ export default function Numeros() {
           nota={`${k.evitaveis} contatos`} tom={k.evitavelPct > 40 ? "alerta" : "normal"} />
         <Tile valor={`${k.primeiraResposta}h`} rotulo="até a primeira resposta"
           nota="contando só horas de expediente" />
-        <Tile valor={brl(k.exposicao)} rotulo="parado esperando resposta"
-          href="/pessoas?lista=interessados" tom="alerta"
+        <Tile valor={k.comSinal} rotulo="famílias com sinal aberto"
+          href="/familias" tom={k.comSinal > 0 ? "alerta" : "bom"}
           nota={`${semSerRespondidas()} conversas sem resposta nenhuma`} />
       </div>
 

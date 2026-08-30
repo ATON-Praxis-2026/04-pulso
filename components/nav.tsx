@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 const SECOES: { titulo: string; itens: [string, string, boolean?][] }[] = [
   { titulo: "", itens: [["/", "A semana", true]] },
   { titulo: "Conferir", itens: [
-    ["/pessoas", "Pessoas"],
+    ["/familias", "Famílias"],
     ["/temas", "Temas e desejos"],
     ["/operacao", "Operação"],
     ["/conversas", "Conversas"],
@@ -15,7 +15,7 @@ const SECOES: { titulo: string; itens: [string, string, boolean?][] }[] = [
 
 export const MOBILE: [string, string][] = [
   ["/", "Semana"],
-  ["/pessoas", "Pessoas"],
+  ["/familias", "Famílias"],
   ["/conversas", "Conversas"],
 ];
 

@@ -1,6 +1,12 @@
-# Interea
+# Pulso
 
 > Tudo o que chega no WhatsApp da secretaria, virado em decisão.
+
+Colégio K-12 privado. Lê 100% das conversas com as famílias e entrega ao diretor
+as decisões que só ele pode tomar — antes da rematrícula, não depois.
+
+**O que o produto não faz:** não fala de receita perdida, não persegue lead, não
+avalia atendente, não envia mensagem por ninguém, não prevê evasão.
 
 Lê 100% das conversas, decide o que importa e entrega ao gestor da escola as
 decisões que só ele pode tomar. Não é caixa de entrada, não é chatbot, não
@@ -10,7 +16,7 @@ responde por ninguém.
 
 ```bash
 npm install
-npm run seed     # massa sintética com padrão plantado (~360 conversas, 3 meses)
+npm run seed     # massa sintética com padrão plantado (~290 conversas, 3 meses)
 npm run dev      # http://localhost:3000
 ```
 
@@ -155,3 +161,29 @@ Ver [DESIGN.md](DESIGN.md). Resumo: moldura verde-oliva, conteúdo em papel,
 cartão branco. Newsreader nos títulos, IBM Plex Mono nos rótulos em caixa alta.
 Etiqueta sólida colorida por tipo de decisão. Uma superfície só, clara — a cena
 de uso é um corredor de escola de dia, não um editor de código à noite.
+
+
+## Os três blocos e a consequência
+
+**1. Quem parou de falar.** A família regular que sumiu. Zero ocorrências, zero
+reclamações — invisível para qualquer sistema que dispare em evento. É o único
+sinal que nenhum concorrente vê, e por isso tem vaga garantida no resumo mesmo
+quando não é a de maior pontuação.
+
+**2. Quem ficou no ar.** Perguntou e ninguém respondeu, ou ouviu "vou verificar
+e te aviso" e ninguém voltou. O segundo caso é o mais grave: a escola respondeu,
+só não cumpriu.
+
+**3. O que se repetiu.** 25 famílias dizendo a mesma coisa com 25 palavras
+diferentes. Vem com o texto pronto — é o único movimento que faz o mês seguinte
+ter menos trabalho que o atual.
+
+**A consequência: volte e avise.** Quando o diretor marca uma decisão como
+resolvida, o Pulso devolve na semana seguinte a lista de quem tinha reclamado
+daquilo, com o aviso escrito. É o único movimento que **mexe** na experiência da
+família em vez de medi-la.
+
+## O relógio é a rematrícula
+
+Não existe SLA inventado. A régua é a data que já está na vida do diretor:
+*faltam 2 meses*. Configurada em `lib/config.ts`.

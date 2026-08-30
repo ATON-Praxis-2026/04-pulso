@@ -234,3 +234,36 @@ export function movimentos(): Movimento[] {
     .map((m) => ({ ...m, resolvido: resolvidas.has(m.chave) }))
     .sort((a, b) => ordem.indexOf(a.tipo) - ordem.indexOf(b.tipo) || b.quantas - a.quantas);
 }
+
+
+export type LinhaConversa = {
+  id: number; nome: string; tema: string | null; tipo_contato: string | null;
+  ultima_em: string; primeira: string; respondida: number; n_msgs: number;
+};
+
+export function listaConversas(f: {
+  q?: string; tema?: string; tipo?: string; semResposta?: boolean; limite?: number;
+} = {}) {
+  const where: string[] = [];
+  const args: unknown[] = [];
+  if (f.tema) { where.push("a.tema = ?"); args.push(f.tema); }
+  if (f.tipo) { where.push("a.tipo_contato = ?"); args.push(f.tipo); }
+  if (f.q) {
+    where.push(`(ct.nome LIKE ? OR EXISTS (SELECT 1 FROM mensagens m WHERE m.conversa_id = c.id AND m.texto LIKE ?))`);
+    args.push(`%${f.q}%`, `%${f.q}%`);
+  }
+  if (f.semResposta) where.push(
+    `NOT EXISTS (SELECT 1 FROM mensagens m WHERE m.conversa_id = c.id AND m.direcao = 'saida')`);
+
+  return all<LinhaConversa>(`
+    SELECT c.id, ct.nome, a.tema, a.tipo_contato, c.ultima_em,
+           (SELECT texto FROM mensagens WHERE conversa_id=c.id AND direcao='entrada'
+             ORDER BY criada_em LIMIT 1) AS primeira,
+           EXISTS (SELECT 1 FROM mensagens m WHERE m.conversa_id=c.id AND m.direcao='saida') AS respondida,
+           (SELECT COUNT(*) FROM mensagens WHERE conversa_id=c.id) AS n_msgs
+    FROM conversas c
+    JOIN contatos ct ON ct.id = c.contato_id
+    LEFT JOIN analises a ON a.conversa_id = c.id
+    ${where.length ? "WHERE " + where.join(" AND ") : ""}
+    ORDER BY c.ultima_em DESC LIMIT ?`, ...args, f.limite ?? 60);
+}

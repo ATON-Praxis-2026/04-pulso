@@ -44,6 +44,22 @@ export function familiasComSinal(): Familia[] {
   });
 }
 
+/** As famílias que cabem no resumo, com uma regra a mais.
+ *
+ *  A ordenação por pontos é correta — quem falou em sair é mais urgente que
+ *  quem só parou de escrever. Mas as que falaram estão visíveis para qualquer
+ *  um que leia o WhatsApp. A que parou não está visível para ninguém, e é a
+ *  única que este produto existe para achar. Então ela tem vaga garantida.
+ */
+export function familiasDoResumo(teto: number): Familia[] {
+  const todas = familiasComSinal();
+  const topo = todas.slice(0, teto);
+  const temSilencio = (f: Familia) => f.sinais.some((s) => s.tipo === "silencio");
+  if (topo.some(temSilencio)) return topo;
+  const calada = todas.find(temSilencio);
+  return calada ? [...topo.slice(0, teto - 1), calada] : topo;
+}
+
 /** Temas priorizados. Janela mensal — tema é crônico, semana é ruído. */
 export function temas() {
   const mes = all<{ tema: string; n: number; sev: number }>(
