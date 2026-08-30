@@ -84,3 +84,22 @@ CREATE TABLE IF NOT EXISTS correcoes (
   corrigido_em TEXT NOT NULL,
   avisados     INTEGER NOT NULL DEFAULT 0
 );
+
+-- Onboarding: o que uma pessoa da equipe levantou com a escola na primeira
+-- conversa. É o que faz o agente falar a língua daquela escola em vez de falar
+-- a língua de "escola em geral". Hoje é humano de propósito.
+CREATE TABLE IF NOT EXISTS contexto (
+  chave  TEXT PRIMARY KEY,
+  rotulo TEXT NOT NULL,
+  valor  TEXT NOT NULL,
+  ordem  INTEGER NOT NULL DEFAULT 0
+);
+
+-- O quadro do diretor. `o_que_fiz` é a peça que fecha o ciclo de aprendizado:
+-- o agente passa a saber o que esta escola faz diante de cada padrão.
+CREATE TABLE IF NOT EXISTS decisoes_estado (
+  chave         TEXT PRIMARY KEY,
+  estado        TEXT NOT NULL,     -- decidir | fazendo | feito
+  o_que_fiz     TEXT,
+  atualizado_em TEXT NOT NULL
+);

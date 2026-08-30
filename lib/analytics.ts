@@ -128,6 +128,8 @@ export type Movimento = {
   unidade?: string;
   artefato?: { rotulo: string; conteudo: string };
   copiar?: { rotulo: string; texto: string };
+  estado?: "decidir" | "fazendo" | "feito";
+  oQueFiz?: string | null;
   resolvido?: boolean;
   href?: string;
 };
@@ -228,12 +230,20 @@ export function movimentos(): Movimento[] {
     });
   }
 
-  const resolvidas = new Set(all<{ chave: string }>("SELECT chave FROM resolvidos").map((r) => r.chave));
+  const estados = new Map(all<{ chave: string; estado: string; o_que_fiz: string | null }>(
+    "SELECT chave, estado, o_que_fiz FROM decisoes_estado").map((r) => [r.chave, r]));
   const ordem: Movimento["tipo"][] = ["avisar", "corrigir", "estrutural", "destravar", "abrir", "manter"];
   return out
-    .map((m) => ({ ...m, resolvido: resolvidas.has(m.chave) }))
+    .map((m) => {
+      const e = estados.get(m.chave);
+      const estado = (e?.estado ?? "decidir") as Movimento["estado"];
+      return { ...m, estado, oQueFiz: e?.o_que_fiz ?? null, resolvido: estado === "feito" };
+    })
     .sort((a, b) => ordem.indexOf(a.tipo) - ordem.indexOf(b.tipo) || b.quantas - a.quantas);
 }
+
+/** Só as que ainda pedem alguma coisa dele. */
+export const movimentosAbertos = () => movimentos().filter((m) => m.estado !== "feito");
 
 
 export type LinhaConversa = {
@@ -257,8 +267,11 @@ export function listaConversas(f: {
 
   return all<LinhaConversa>(`
     SELECT c.id, ct.nome, a.tema, a.tipo_contato, c.ultima_em,
-           (SELECT texto FROM mensagens WHERE conversa_id=c.id AND direcao='entrada'
-             ORDER BY criada_em LIMIT 1) AS primeira,
+           COALESCE(
+             (SELECT texto FROM mensagens WHERE conversa_id=c.id AND direcao='entrada'
+               AND length(texto) > 25 ORDER BY criada_em LIMIT 1),
+             (SELECT texto FROM mensagens WHERE conversa_id=c.id AND direcao='entrada'
+               ORDER BY criada_em LIMIT 1)) AS primeira,
            EXISTS (SELECT 1 FROM mensagens m WHERE m.conversa_id=c.id AND m.direcao='saida') AS respondida,
            (SELECT COUNT(*) FROM mensagens WHERE conversa_id=c.id) AS n_msgs
     FROM conversas c

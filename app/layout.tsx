@@ -3,7 +3,7 @@ import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import Link from "next/link";
 import { Nav, NavMobile } from "@/components/nav";
 import { movimentos } from "@/lib/analytics";
-import { CONFIG } from "@/lib/config";
+import { CONFIG, PRODUTO } from "@/lib/config";
 import "./globals.css";
 
 const serifada = Newsreader({
@@ -15,13 +15,13 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Interea",
+  title: "Pulso",
   description: "Tudo o que chega no WhatsApp da secretaria, virado em decisão.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   let n = 0;
-  try { n = movimentos().filter((m) => !m.resolvido).length; } catch { /* npm run seed */ }
+  try { n = movimentos().filter((m) => m.estado !== "feito").length; } catch { /* npm run seed */ }
 
   return (
     <html lang="pt-BR" className={`${serifada.variable} ${mono.variable} h-full antialiased`}>
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <div className="h-16 flex items-center px-6">
               <Link href="/" className="font-[family-name:var(--font-newsreader)] text-xl
                 text-white tracking-tight">
-                Interea
+                {PRODUTO}
               </Link>
             </div>
             <div className="px-3 flex-1"><Nav decisoes={n} /></div>
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <p className="rotulo !text-white/55 mt-0.5">{CONFIG.gestor} · diretor</p>
               </div>
               <Link href="/como-funciona" className="block text-sm text-white/60 hover:text-white">
-                como a Interea decide
+                como o {PRODUTO} decide
               </Link>
             </div>
           </aside>
@@ -52,7 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <header className="h-16 flex items-center px-5 sm:px-8 gap-4 border-b border-border">
               <Link href="/" className="md:hidden font-[family-name:var(--font-newsreader)]
                 text-lg tracking-tight">
-                Interea
+                {PRODUTO}
               </Link>
               <span className="ml-auto rotulo flex items-center gap-2">
                 <span className="size-1.5 rounded-full bg-[var(--verde)]" aria-hidden />

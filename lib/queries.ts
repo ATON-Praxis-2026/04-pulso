@@ -87,12 +87,15 @@ export function desejos() {
      GROUP BY tema ORDER BY n DESC`, AGORA
   ).map((g) => ({
     ...g, label: CONFIG.temasLabel[g.tema] ?? g.tema,
+    // A primeira mensagem costuma ser "Boa tarde!". A evidência é o pedido,
+    // não a saudação: pega a primeira que tem tamanho de frase.
     falas: all<{ texto: string }>(
       `SELECT (SELECT texto FROM mensagens WHERE conversa_id = a.conversa_id
-                AND direcao='entrada' ORDER BY criada_em LIMIT 1) AS texto
+                AND direcao='entrada' AND length(texto) > 25
+                ORDER BY criada_em LIMIT 1) AS texto
        FROM analises a WHERE a.tipo_contato='pedido_inexistente' AND a.tema = ?
-         AND a.criada_em >= date(?, '-30 days') LIMIT 4`, g.tema, AGORA
-    ).map((r) => r.texto).filter(Boolean),
+         AND a.criada_em >= date(?, '-30 days') LIMIT 6`, g.tema, AGORA
+    ).map((r) => r.texto).filter(Boolean).slice(0, 4),
   }));
 }
 

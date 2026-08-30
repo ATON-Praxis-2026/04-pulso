@@ -34,8 +34,8 @@ function mensagemEnviada() {
 
 export default function Semana() {
   const todos = movimentos();
-  const abertos = todos.filter((m) => !m.resolvido);
-  const resolvidos = todos.filter((m) => m.resolvido);
+  const abertos = todos.filter((m) => m.estado !== "feito");
+  const resolvidos = todos.filter((m) => m.estado === "feito");
   const bons = positivos();
   const meses = mesesAteRematricula(AGORA);
   const msg = mensagemEnviada();
@@ -119,10 +119,12 @@ export default function Semana() {
       )}
 
       {resolvidos.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="rotulo">você já resolveu {resolvidos.length} esta semana</h2>
-          {resolvidos.map((m) => <MovimentoCard key={m.chave} m={m} compacto />)}
-        </section>
+        <p className="rotulo">
+          <Link href="/decisoes" className="hover:text-foreground underline underline-offset-4
+            decoration-[var(--regua)]">
+            você já fechou {resolvidos.length} no quadro →
+          </Link>
+        </p>
       )}
 
       <Link href="/numeros" className="inline-block rotulo hover:text-foreground

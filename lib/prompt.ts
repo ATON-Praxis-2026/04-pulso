@@ -1,8 +1,9 @@
 import { CONFIG } from "./config";
+import { blocoDeContexto } from "./contexto";
 
 export const MODEL = process.env.PULSO_MODEL ?? "claude-opus-5";
 
-export const SISTEMA = `Você analisa conversas do WhatsApp da secretaria de um colégio
+const BASE = `Você analisa conversas do WhatsApp da secretaria de um colégio
 particular de educação básica (K-12). De um lado a família — pai, mãe ou responsável.
 Do outro a secretaria.
 
@@ -50,6 +51,10 @@ para avisos operacionais: reunião, evento, calendário, comunicado.
 
 CAMPO evitavel: este contato precisava existir? Uma dúvida que já estaria
 respondida num comunicado ou no portal é evitável. Um pedido legítimo não é.`;
+
+/** O prompt é montado a cada chamada porque o contexto muda: o onboarding é
+ *  editável e o registro do que a escola fez cresce a cada decisão fechada. */
+export const SISTEMA = BASE + blocoDeContexto();
 
 export const SCHEMA = {
   type: "object",

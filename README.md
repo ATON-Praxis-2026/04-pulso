@@ -220,3 +220,31 @@ Resultado da última execução, sobre `claude-opus-5`:
 Duas regras do prompt nasceram de falhas que esta avaliação pegou: a fronteira
 entre `desempenho_e_boletim` e `comunicacao_e_avisos`, e o fato de que uma
 comparação favorável a esta escola é elogio, não sinal de risco.
+
+## O contexto é o que não se copia
+
+Duas coisas alimentam o prompt do agente, e são elas que fazem ele analisar
+*esta* escola em vez de "uma escola":
+
+**Do onboarding.** Uma pessoa da equipe senta com a direção e levanta sete
+coisas: porte e séries, o que a escola oferece, o que ela **não** oferece, as
+datas que mandam no ano, quem é quem, os assuntos sensíveis, e como a escola
+fala com as famílias. Hoje isso é humano de propósito — metade destas respostas
+ninguém escreve num formulário.
+
+**Do uso.** Toda vez que o diretor fecha um cartão no quadro, ele conta o que
+fez. Essa lista entra no prompt como "o que esta escola já fez diante de padrões
+parecidos" — o agente para de sugerir o genérico e passa a sugerir o caminho que
+esta escola costuma tomar.
+
+O onboarding qualquer um copia. A segunda lista, não: são meses de decisões de
+uma escola específica. No terceiro mês, trocar de ferramenta não é perder
+funcionalidade — é perder a memória.
+
+Visível em `/contexto`. A montagem do prompt está em `lib/contexto.ts`.
+
+## O quadro
+
+`/decisoes` é um quadro de três colunas — **para decidir · em andamento · feito**.
+Fechar um cartão pede uma frase: *o que você fez?* É a peça que fecha o ciclo de
+aprendizado, e é também o gatilho do movimento "volte e avise".

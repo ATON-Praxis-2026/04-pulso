@@ -13,7 +13,7 @@ fs.mkdirSync(path.join(ROOT, "data"), { recursive: true });
 // aberto, apagar o arquivo o deixa lendo um inode fantasma e a tela congela.
 const db = new DatabaseSync(DB_PATH);
 for (const t of ["sinais", "analises", "mensagens", "conversas", "contatos",
-                 "textos", "resolvidos", "correcoes"])
+                 "textos", "resolvidos", "correcoes", "contexto", "decisoes_estado"])
   db.exec(`DROP TABLE IF EXISTS ${t}`);
 db.exec(fs.readFileSync(path.join(ROOT, "lib", "schema.sql"), "utf8"));
 
@@ -398,6 +398,19 @@ db.prepare(`INSERT OR REPLACE INTO correcoes (tema, o_que_mudou, corrigido_em, a
   "entrada_e_saida",
   "O escalonamento da saída mudou: 1º ao 5º ano saem 10 minutos antes, e o portão da rua lateral passou a operar das 17h às 18h.",
   iso(dias(HOJE, -20)));
+
+// O que a equipe levantou com a escola no onboarding. Vinte minutos de conversa
+// que o agente carrega em toda análise depois disso.
+const insCtx = db.prepare("INSERT OR REPLACE INTO contexto (chave, rotulo, valor, ordem) VALUES (?,?,?,?)");
+[
+  ["porte", "Porte e séries", "500 alunos, da Educação Infantil ao 9º ano. Turmas de 25 a 30.", 1],
+  ["oferece", "O que a escola oferece", "Período parcial manhã e tarde. Contraturno de futsal, teatro e xadrez. Reforço de matemática às quartas.", 2],
+  ["nao_oferece", "O que a escola NÃO oferece", "Não tem período integral, robótica, ensino médio, nem transporte próprio. Não trabalha com material digital.", 3],
+  ["calendario", "Datas que mandam no ano", "Rematrícula abre 3 de novembro. Boletim fecha no fim de cada bimestre. Reunião de pais em março, junho e setembro.", 4],
+  ["equipe", "Quem é quem", "Secretaria: Cláudia, Rose, Marcos e Bia. Coordenação pedagógica: Renata (fund. 1) e Paulo (fund. 2). Direção: Ricardo.", 5],
+  ["sensivel", "Assuntos sensíveis nesta escola", "A saída às 17h30 é ponto histórico de reclamação. A professora Camila é muito querida e citada pelo nome. Houve troca de professor de matemática em julho.", 6],
+  ["jeito", "Como a escola fala", "Trata as famílias por você, não por senhor. Assina como 'Secretaria do Colégio Modelo'. Evita formalidade excessiva.", 7],
+].forEach((r) => insCtx.run(...r));
 
 const n = (q) => db.prepare(q).get().n;
 console.log(`

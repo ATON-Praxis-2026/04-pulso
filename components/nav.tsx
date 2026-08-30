@@ -3,13 +3,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const SECOES: { titulo: string; itens: [string, string, boolean?][] }[] = [
-  { titulo: "", itens: [["/", "A semana", true]] },
+  { titulo: "", itens: [["/", "A semana", true], ["/decisoes", "O quadro"]] },
   { titulo: "Conferir", itens: [
     ["/familias", "Famílias"],
     ["/temas", "Temas e desejos"],
     ["/operacao", "Operação"],
     ["/conversas", "Conversas"],
     ["/numeros", "Os números"],
+    ["/contexto", "O que sabemos da escola"],
   ]},
 ];
 

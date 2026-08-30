@@ -1,4 +1,4 @@
-# Sistema visual — Interea
+# Sistema visual — Pulso
 
 Derivado de uma referência editorial: fundo verde-oliva, painel de papel, cartão
 branco. Serifada de livro nos títulos, monoespaçada em caixa alta nos rótulos.
