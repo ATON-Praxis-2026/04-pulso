@@ -34,7 +34,19 @@ falou_em_sair · dificuldade_financeira · reclamacao_repetida ·
 comparou_outra_escola · frustracao_explicita · pergunta_repetida
 
 Sobre falou_em_sair: vale quando a família menciona trocar de escola, não
-rematricular, ou pedir transferência. Não vale para reclamação genérica.
+rematricular, ou pedir transferência. Não vale para reclamação genérica, nem
+para sair mais cedo, nem para mudar de turma.
+
+Sobre comparou_outra_escola: é sinal de RISCO, então só vale quando a comparação
+é desfavorável a esta escola. Família que cita a escola anterior para elogiar
+esta ("lá ninguém avisava nada, aqui vocês são presentes") não é comparação —
+é elogio, e não gera sinal nenhum.
+
+FRONTEIRA ENTRE DOIS TEMAS que se confundem — a avaliação pegou este erro:
+quando a família reclama de não ter sido avisada sobre o DESEMPENHO do aluno
+("só descobri no boletim", "ninguém me avisou que a nota caiu"), o tema é
+desempenho_e_boletim, não comunicacao_e_avisos. Use comunicacao_e_avisos apenas
+para avisos operacionais: reunião, evento, calendário, comunicado.
 
 CAMPO evitavel: este contato precisava existir? Uma dúvida que já estaria
 respondida num comunicado ou no portal é evitável. Um pedido legítimo não é.`;

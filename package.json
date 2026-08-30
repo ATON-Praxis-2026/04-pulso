@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed.mjs",
-    "analisar": "tsx scripts/analisar.mts"
+    "analisar": "tsx scripts/analisar.mts",
+    "avaliar": "tsx scripts/avaliar.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.122.0",

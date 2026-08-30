@@ -187,3 +187,36 @@ família em vez de medi-la.
 
 Não existe SLA inventado. A régua é a data que já está na vida do diretor:
 *faltam 2 meses*. Configurada em `lib/config.ts`.
+
+## Provar que o agente funciona
+
+```bash
+npm run avaliar              # tudo
+npm run avaliar -- --rapido  # pula o teste de estabilidade (5× por caso)
+```
+
+Não prova que o Pulso reduz evasão — isso exige um semestre, coorte e grupo de
+controle, e não prometemos. Prova que **o agente acerta, sabe dizer não, é
+estável e nunca inventa uma citação.**
+
+Metade dos casos em `avaliacao/casos.ts` são **armadilhas**: conversas escritas
+para fazer o modelo disparar quando não deveria. "Preciso que a Júlia saia mais
+cedo hoje" tem a palavra sair. "A gente saiu da escola anterior, aqui vocês são
+muito mais presentes" cita outra escola. Um detector testado só com casos
+positivos mede vontade de acertar, não acurácia.
+
+Resultado da última execução, sobre `claude-opus-5`:
+
+| | |
+|---|---|
+| Precisão · cobertura | 100% · 100% |
+| Armadilhas recusadas | 8 de 8 |
+| Estabilidade | 5 de 5 execuções idênticas |
+| Evidência literal | 30/30 citações existem na conversa |
+| Famílias plantadas encontradas | 5 de 5 |
+| Ruído | 3 de 45 famílias normais cruzaram o limiar (7%) |
+| Antecedência | sinal mais recente 66 dias antes da rematrícula |
+
+Duas regras do prompt nasceram de falhas que esta avaliação pegou: a fronteira
+entre `desempenho_e_boletim` e `comunicacao_e_avisos`, e o fato de que uma
+comparação favorável a esta escola é elogio, não sinal de risco.
