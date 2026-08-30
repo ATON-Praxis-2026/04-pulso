@@ -98,8 +98,12 @@ CREATE TABLE IF NOT EXISTS contexto (
 -- O quadro do diretor. `o_que_fiz` é a peça que fecha o ciclo de aprendizado:
 -- o agente passa a saber o que esta escola faz diante de cada padrão.
 CREATE TABLE IF NOT EXISTS decisoes_estado (
-  chave         TEXT PRIMARY KEY,
-  estado        TEXT NOT NULL,     -- decidir | fazendo | feito
-  o_que_fiz     TEXT,
-  atualizado_em TEXT NOT NULL
+  chave           TEXT PRIMARY KEY,
+  estado          TEXT NOT NULL,     -- decidir | fazendo | feito
+  o_que_fiz       TEXT,
+  -- Se ele NÃO seguiu a sugestão, o que ele fez vale mais: é a escola
+  -- discordando do agente, e é o dado mais rico que existe aqui.
+  seguiu_sugestao INTEGER,
+  tema            TEXT,              -- para detectar reincidência depois
+  atualizado_em   TEXT NOT NULL
 );

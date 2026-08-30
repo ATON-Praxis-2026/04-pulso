@@ -1,6 +1,7 @@
 import { all, one } from "./db";
 import { CONFIG, mesesAteRematricula } from "./config";
 import { AGORA, familiasComSinal, temas, desejos, textoDoTema, correcoesPendentes } from "./queries";
+import { calcularScore, reincidencias, type Score } from "./score";
 
 const g = (q: string, ...p: unknown[]) => one<{ n: number }>(q, ...p)?.n ?? 0;
 
@@ -121,13 +122,15 @@ export function temasEvitaveis() {
 
 export type Movimento = {
   chave: string;
-  tipo: "avisar" | "corrigir" | "estrutural" | "destravar" | "abrir" | "manter";
+  tipo: "reincidencia" | "avisar" | "corrigir" | "estrutural" | "destravar" | "abrir" | "manter";
   titulo: string;
   porque: string;
   quantas: number;
   unidade?: string;
   artefato?: { rotulo: string; conteudo: string };
   copiar?: { rotulo: string; texto: string };
+  score?: Score;
+  tema?: string;
   estado?: "decidir" | "fazendo" | "feito";
   oQueFiz?: string | null;
   resolvido?: boolean;
@@ -136,6 +139,30 @@ export type Movimento = {
 
 export function movimentos(): Movimento[] {
   const out: Movimento[] = [];
+  const ts = temas();
+  const grav = (tema: string) => one<{ media: number; max: number }>(
+    `SELECT AVG(severidade) media,
+            MAX(CASE WHEN criada_em >= date('${AGORA}', '-7 days') THEN severidade ELSE 0 END) max
+     FROM analises WHERE tema = ? AND criada_em >= date('${AGORA}', '-30 days')`, tema);
+
+  // 0. Voltou depois de resolvido. Nada é mais caro que isso, e a regra é dura:
+  //    o que foi tentado não pode ser sugerido de novo.
+  for (const r of reincidencias()) {
+    const t = ts.find((x) => x.tema === r.tema);
+    const g = grav(r.tema);
+    out.push({
+      chave: `reincidencia:${r.tema}`, tipo: "reincidencia", tema: r.tema,
+      titulo: `${CONFIG.temasLabel[r.tema] ?? r.tema} voltou`,
+      porque: `Você resolveu isso há ${r.diasDesde} dias e ${r.voltou} famílias trouxeram de novo depois. O que foi feito não segurou — e o Pulso não vai repetir a mesma sugestão.`,
+      quantas: r.voltou, unidade: "famílias desde então",
+      artefato: { rotulo: "O que você fez da última vez", conteudo: r.o_que_fiz },
+      score: calcularScore({
+        familias: r.voltou, gravidadeMedia: g?.media ?? 2, gravidadeMaximaRecente: g?.max ?? 0,
+        variacao: t?.variacao ?? 0, jaFoiCorrigido: true,
+      }),
+      href: `/conversas?tema=${r.tema}`,
+    });
+  }
 
   // 1. Voltar e avisar quem reclamou. É o único movimento que MEXE na
   //    experiência da família em vez de medi-la — e nasce do "Já resolvi".
@@ -159,11 +186,17 @@ export function movimentos(): Movimento[] {
   }
 
   // 2. Corrigir a comunicação — muita gente perguntando o que já deveria estar escrito.
-  const alvo = temas().find((t) => t.n >= 12 && t.tema !== "outros");
+  const jaTratados = new Set(reincidencias().map((r) => r.tema));
+  const alvo = ts.find((t) => t.n >= 12 && t.tema !== "outros" && !jaTratados.has(t.tema));
   if (alvo) {
     const txt = textoDoTema(alvo.tema);
     out.push({
-      chave: `corrigir:${alvo.tema}`, tipo: "corrigir",
+      chave: `corrigir:${alvo.tema}`, tipo: "corrigir", tema: alvo.tema,
+      score: calcularScore({
+        familias: alvo.n, gravidadeMedia: grav(alvo.tema)?.media ?? 2,
+        gravidadeMaximaRecente: grav(alvo.tema)?.max ?? 0,
+        variacao: alvo.variacao, jaFoiCorrigido: false,
+      }),
       titulo: `Avisar antes do boletim, não depois`,
       porque: `${alvo.n} famílias disseram a mesma coisa este mês${
         alvo.variacao > 0 ? `, ${alvo.variacao} a mais que no anterior` : ""
@@ -185,7 +218,12 @@ export function movimentos(): Movimento[] {
   for (const [tema, nomes] of porTema) {
     if (nomes.length < 2) continue;
     out.push({
-      chave: `estrutural:${tema}`, tipo: "estrutural",
+      chave: `estrutural:${tema}`, tipo: "estrutural", tema,
+      score: calcularScore({
+        familias: nomes.length, gravidadeMedia: grav(tema)?.media ?? 3,
+        gravidadeMaximaRecente: grav(tema)?.max ?? 0,
+        variacao: ts.find((x) => x.tema === tema)?.variacao ?? 0, jaFoiCorrigido: false,
+      }),
       titulo: `Olhar ${(CONFIG.temasLabel[tema] ?? tema).toLowerCase()} de perto`,
       porque: `${nomes.length} famílias deram sinal pela mesma causa: ${nomes.join(", ")}. Quando duas ou mais apontam para o mesmo lugar, deixou de ser caso isolado.`,
       quantas: nomes.length, unidade: "famílias", href: "/familias",
@@ -232,14 +270,22 @@ export function movimentos(): Movimento[] {
 
   const estados = new Map(all<{ chave: string; estado: string; o_que_fiz: string | null }>(
     "SELECT chave, estado, o_que_fiz FROM decisoes_estado").map((r) => [r.chave, r]));
-  const ordem: Movimento["tipo"][] = ["avisar", "corrigir", "estrutural", "destravar", "abrir", "manter"];
+
+/** O que não pode esperar segunda. */
+
+  const ordem: Movimento["tipo"][] = ["reincidencia", "avisar", "corrigir", "estrutural", "destravar", "abrir", "manter"];
   return out
     .map((m) => {
       const e = estados.get(m.chave);
       const estado = (e?.estado ?? "decidir") as Movimento["estado"];
       return { ...m, estado, oQueFiz: e?.o_que_fiz ?? null, resolvido: estado === "feito" };
     })
-    .sort((a, b) => ordem.indexOf(a.tipo) - ordem.indexOf(b.tipo) || b.quantas - a.quantas);
+    .sort((a, b) => {
+      // O que não pode esperar segunda vem primeiro, sempre.
+      const ua = a.score?.urgencia === "agora" ? 0 : 1;
+      const ub = b.score?.urgencia === "agora" ? 0 : 1;
+      return ua - ub || ordem.indexOf(a.tipo) - ordem.indexOf(b.tipo) || b.quantas - a.quantas;
+    });
 }
 
 /** Só as que ainda pedem alguma coisa dele. */

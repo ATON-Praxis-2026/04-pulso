@@ -6,6 +6,7 @@ import { Copiar } from "@/components/acoes";
 import type { Movimento } from "@/lib/analytics";
 
 const TIPO: Record<string, { nome: string; fundo: string; tinta: string }> = {
+  reincidencia: { nome: "Voltou", fundo: "#7a2f2f", tinta: "#ffffff" },
   avisar:     { nome: "Volte e avise",  fundo: "var(--verde)",     tinta: "#ffffff" },
   corrigir:   { nome: "Corrigir",       fundo: "var(--azul)",      tinta: "var(--tinta)" },
   estrutural: { nome: "Estrutural",     fundo: "var(--terracota)", tinta: "#ffffff" },
@@ -23,6 +24,7 @@ const COLUNAS = [
 function Cartao({ m }: { m: Movimento }) {
   const [abrindo, setAbrindo] = useState(false);
   const [texto, setTexto] = useState(m.oQueFiz ?? "");
+  const [seguiu, setSeguiu] = useState<boolean | null>(null);
   const [pendente, iniciar] = useTransition();
   const router = useRouter();
   const t = TIPO[m.tipo];
@@ -31,7 +33,7 @@ function Cartao({ m }: { m: Movimento }) {
     iniciar(async () => {
       await fetch("/api/decisao", {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ chave: m.chave, estado, o_que_fiz }),
+        body: JSON.stringify({ chave: m.chave, estado, o_que_fiz, seguiu, tema: m.tema }),
       });
       setAbrindo(false);
       router.refresh();
@@ -43,12 +45,23 @@ function Cartao({ m }: { m: Movimento }) {
         <span className="rotulo !text-[0.625rem] px-1.5 py-[3px] leading-none"
           style={{ background: t.fundo, color: t.tinta }}>{t.nome}</span>
         <span className="rotulo">{m.quantas} {m.unidade ?? "famílias"}</span>
+        {m.score?.urgencia === "agora" && (
+          <span className="rotulo !text-[0.625rem] px-1.5 py-[3px] leading-none
+            bg-[#7a2f2f] text-white">não espera segunda</span>
+        )}
       </div>
 
       <h3 className="font-[family-name:var(--font-newsreader)] text-[21px] leading-snug">
         {m.titulo}
       </h3>
       <p className="text-[15px] text-muted-foreground leading-relaxed">{m.porque}</p>
+
+      {m.score && (
+        <p className="rotulo">
+          {m.score.urgencia === "agora" ? "não esperou segunda" : "entrou no resumo de segunda"}
+          {" · "}{m.score.porque}
+        </p>
+      )}
 
       {m.oQueFiz && (
         <div className="bg-[var(--papel-2)] p-3.5">
@@ -59,8 +72,21 @@ function Cartao({ m }: { m: Movimento }) {
 
       {abrindo ? (
         <div className="space-y-2 pt-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rotulo">você seguiu a sugestão?</span>
+            {[[true, "segui"], [false, "fiz de outro jeito"]].map(([v, r]) => (
+              <button key={String(r)} type="button" onClick={() => setSeguiu(v as boolean)}
+                className={`px-3 py-1.5 text-sm border transition-colors ${
+                  seguiu === v ? "border-[var(--tinta)] bg-[var(--tinta)] text-white"
+                               : "border-[var(--regua)] hover:border-[var(--tinta)]"}`}>
+                {r as string}
+              </button>
+            ))}
+          </div>
           <label className="rotulo block" htmlFor={`fiz-${m.chave}`}>
-            o que você fez? o Pulso aprende com isso
+            {seguiu === false
+              ? "o que você fez? isto vale mais que a sugestão — o Pulso aprende com a discordância"
+              : "o que você fez? o Pulso aprende com isso"}
           </label>
           <textarea id={`fiz-${m.chave}`} rows={3} value={texto}
             onChange={(e) => setTexto(e.target.value)}

@@ -248,3 +248,39 @@ Visível em `/contexto`. A montagem do prompt está em `lib/contexto.ts`.
 `/decisoes` é um quadro de três colunas — **para decidir · em andamento · feito**.
 Fechar um cartão pede uma frase: *o que você fez?* É a peça que fecha o ciclo de
 aprendizado, e é também o gatilho do movimento "volte e avise".
+
+## Duas velocidades: o que espera segunda e o que não espera
+
+Cada assunto ganha uma nota de 0 a 100, e a nota decide a velocidade da entrega.
+
+```
+nota = gravidade (0-40) + alcance (0-30) + tendência (0-20) + reincidência (0-10)
+```
+
+**A gravidade recente fura o volume.** Uma família que falou em sair esta semana
+não espera a oitava ocorrência para virar assunto do diretor — sai na hora, fora
+do ciclo de segunda.
+
+A janela de sete dias na gravidade não é detalhe: sem ela, um caso grave de três
+semanas atrás — que já passou por um resumo — marcaria tudo como urgente, e
+"não espera segunda" deixaria de significar qualquer coisa.
+
+O motivo aparece na tela em português: *"25 famílias · cresceu 17 no mês · já foi
+resolvido uma vez e voltou"*.
+
+## Reincidência: o que voltou depois de resolvido
+
+Quando o diretor fecha um cartão contando o que fez, o assunto fica marcado com
+a data. Se ele reaparecer depois disso, o Pulso não trata como assunto novo:
+
+> **Desempenho e boletim voltou**
+> Você resolveu isso há 39 dias e 25 famílias trouxeram de novo depois.
+> O que foi feito não segurou — e o Pulso não vai repetir a mesma sugestão.
+
+E a regra chega ao agente literalmente: *"soluções já tentadas, por assunto — se
+o assunto voltar, isto NÃO resolveu; não sugira a mesma coisa de novo, proponha
+outro caminho."*
+
+Ao fechar um cartão, o Pulso também pergunta **se ele seguiu a sugestão**. Quando
+a resposta é "fiz de outro jeito", o que ele escreveu vale mais que a sugestão
+original — é a escola discordando do agente, e é o dado mais rico que existe aqui.

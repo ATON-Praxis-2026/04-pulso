@@ -6,18 +6,21 @@ const ESTADOS = ["decidir", "fazendo", "feito"];
 /** Move um cartão no quadro. Quando vai para "feito", o diretor conta o que
  *  fez — e é isso que o agente passa a saber sobre esta escola. */
 export async function POST(req: Request) {
-  const { chave, estado, o_que_fiz } = await req.json().catch(() => ({}));
+  const { chave, estado, o_que_fiz, seguiu, tema } = await req.json().catch(() => ({}));
   if (!chave || !ESTADOS.includes(estado))
     return Response.json({ ok: false }, { status: 400 });
 
   db().prepare(
-    `INSERT INTO decisoes_estado (chave, estado, o_que_fiz, atualizado_em)
-     VALUES (?, ?, ?, datetime('now'))
+    `INSERT INTO decisoes_estado (chave, estado, o_que_fiz, seguiu_sugestao, tema, atualizado_em)
+     VALUES (?, ?, ?, ?, ?, datetime('now'))
      ON CONFLICT(chave) DO UPDATE SET
        estado = excluded.estado,
        o_que_fiz = COALESCE(NULLIF(excluded.o_que_fiz, ''), decisoes_estado.o_que_fiz),
+       seguiu_sugestao = COALESCE(excluded.seguiu_sugestao, decisoes_estado.seguiu_sugestao),
+       tema = COALESCE(excluded.tema, decisoes_estado.tema),
        atualizado_em = excluded.atualizado_em`
-  ).run(chave, estado, o_que_fiz ?? null);
+  ).run(chave, estado, o_que_fiz ?? null,
+        seguiu === true ? 1 : seguiu === false ? 0 : null, tema ?? null);
 
   revalidatePath("/", "layout");
   return Response.json({ ok: true });

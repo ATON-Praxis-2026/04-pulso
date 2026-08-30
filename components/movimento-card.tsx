@@ -6,6 +6,7 @@ import type { Movimento } from "@/lib/analytics";
 /** As etiquetas sólidas da referência, uma por tipo de decisão.
  *  Terracota, azul-céu, ocre e oliva — todas validadas em AA. */
 const TIPO: Record<Movimento["tipo"], { nome: string; fundo: string; tinta: string }> = {
+  reincidencia: { nome: "Voltou", fundo: "#7a2f2f", tinta: "#ffffff" },
   avisar:     { nome: "Volte e avise",  fundo: "var(--verde)",     tinta: "#ffffff" },
   corrigir:   { nome: "Corrigir",       fundo: "var(--azul)",      tinta: "var(--tinta)" },
   estrutural: { nome: "Estrutural",     fundo: "var(--terracota)", tinta: "#ffffff" },

@@ -18,7 +18,9 @@ function mensagemEnviada() {
   for (const b of positivos()) l.push(`✅ ${b}`);
   if (mov.length) {
     l.push("", `→ ${mov.length} decisões para você`);
-    mov.forEach((m, i) => l.push(`${i + 1}. ${m.titulo} — ${m.quantas} ${m.unidade ?? "famílias"}`));
+    mov.forEach((m, i) => l.push(
+      `${i + 1}. ${m.titulo} — ${m.quantas} ${m.unidade ?? "famílias"}` +
+      (m.score?.urgencia === "agora" ? "  ⚡ já te avisei durante a semana" : "")));
   }
   if (fam.length) {
     l.push("", `⚠️ ${fam.length} famílias deram sinal`);
@@ -35,6 +37,8 @@ function mensagemEnviada() {
 export default function Semana() {
   const todos = movimentos();
   const abertos = todos.filter((m) => m.estado !== "feito");
+  const agora = abertos.filter((m) => m.score?.urgencia === "agora");
+  const naSemana = abertos.filter((m) => m.score?.urgencia !== "agora");
   const resolvidos = todos.filter((m) => m.estado === "feito");
   const bons = positivos();
   const meses = mesesAteRematricula(AGORA);
@@ -105,9 +109,12 @@ export default function Semana() {
         <section className="space-y-4">
           <h2 className="rotulo">
             {abertos.length === 1 ? "1 decisão para você" : `${abertos.length} decisões para você`}
+            {agora.length > 0 && (
+              <span className="!text-[#7a2f2f]"> · {agora.length} não {agora.length === 1 ? "esperou" : "esperaram"} segunda</span>
+            )}
           </h2>
           <div className="space-y-4">
-            {abertos.slice(0, 3).map((m) => <MovimentoCard key={m.chave} m={m} />)}
+            {[...agora, ...naSemana].slice(0, 3).map((m) => <MovimentoCard key={m.chave} m={m} />)}
           </div>
           {abertos.length > 3 && (
             <Link href="/decisoes" className="inline-block text-[17px] underline underline-offset-4

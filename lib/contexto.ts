@@ -1,4 +1,5 @@
 import { all } from "./db";
+import { jaTentado } from "./score";
 
 export type Contexto = { chave: string; rotulo: string; valor: string; ordem: number };
 
@@ -25,6 +26,12 @@ export function blocoDeContexto() {
   if (ctx.length) {
     partes.push("SOBRE ESTA ESCOLA — levantado com a direção no onboarding:\n" +
       ctx.map((c) => `- ${c.rotulo}: ${c.valor}`).join("\n"));
+  }
+  const tentadas = jaTentado();
+  if (tentadas.length) {
+    partes.push("SOLUÇÕES JÁ TENTADAS, POR ASSUNTO. Se o assunto voltar a aparecer, " +
+      "isto NÃO resolveu — não sugira a mesma coisa de novo, proponha outro caminho:\n" +
+      tentadas.map((s) => `- ${s.tema}: ${s.o_que_fiz}`).join("\n"));
   }
   if (feitas.length) {
     partes.push("O QUE ESTA ESCOLA JÁ FEZ diante de padrões parecidos. Use para " +
