@@ -45,7 +45,7 @@ export default function Semana() {
   const msg = mensagemEnviada();
 
   return (
-    <div className="space-y-3 max-w-[900px]">
+    <div className="space-y-3">
       <header className="bg-[var(--creme)] text-[var(--tinta)] rounded-[var(--radius)]
         px-6 sm:px-8 py-8 flex items-start gap-6">
         <div className="flex-1 min-w-0">
@@ -110,7 +110,7 @@ export default function Semana() {
         </section>
       ) : (
         <section className="space-y-3">
-          <h2 className="rotulo !text-[var(--creme)]/60 px-2 pt-3">
+          <h2 className="rotulo !text-[var(--tinta-2)] px-2 pt-3">
             {abertos.length === 1 ? "1 decisão para você" : `${abertos.length} decisões para você`}
             {agora.length > 0 && (
               <span className="!text-[#7a2f2f]"> · {agora.length} não {agora.length === 1 ? "esperou" : "esperaram"} segunda</span>
@@ -120,8 +120,8 @@ export default function Semana() {
             {[...agora, ...naSemana].slice(0, 3).map((m) => <MovimentoCard key={m.chave} m={m} />)}
           </div>
           {abertos.length > 3 && (
-            <Link href="/decisoes" className="inline-block rotulo !text-[var(--creme)]/70
-              hover:!text-[var(--creme)] underline underline-offset-4 px-2 py-2">
+            <Link href="/decisoes" className="inline-block rotulo !text-[var(--tinta-2)]
+              hover:!text-[var(--tinta)] underline underline-offset-4 px-2 py-2">
               ver as outras {abertos.length - 3}
             </Link>
           )}
@@ -129,15 +129,15 @@ export default function Semana() {
       )}
 
       {resolvidos.length > 0 && (
-        <p className="rotulo !text-[var(--creme)]/60 px-2">
-          <Link href="/decisoes" className="hover:!text-[var(--creme)] underline underline-offset-4">
+        <p className="rotulo !text-[var(--tinta-2)] px-2">
+          <Link href="/decisoes" className="hover:!text-[var(--tinta)] underline underline-offset-4">
             você já fechou {resolvidos.length} no quadro →
           </Link>
         </p>
       )}
 
-      <Link href="/numeros" className="inline-block rotulo !text-[var(--creme)]/70
-        hover:!text-[var(--creme)] underline underline-offset-4 px-2 py-3">
+      <Link href="/numeros" className="inline-block rotulo !text-[var(--tinta-2)]
+        hover:!text-[var(--tinta)] underline underline-offset-4 px-2 py-3">
         ver os números →
       </Link>
     </div>

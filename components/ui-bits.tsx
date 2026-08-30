@@ -49,12 +49,16 @@ export function Painel({
 }
 
 export function Cabecalho({ titulo, sub, cor = "creme" }: { titulo: string; sub?: string; cor?: Cor }) {
+  // O título visível está na barra do topo. Aqui ele fica só para leitor de tela,
+  // porque a página precisa do seu h1.
   return (
-    <header className={`${COR[cor]} rounded-[var(--radius)] px-6 sm:px-8 py-7 sm:py-8 mb-3`}>
-      <h1 className="text-[30px] sm:text-[36px] leading-[1.08] tracking-[-0.035em] font-bold">
-        {titulo}
-      </h1>
-      {sub && <p className="prosa opacity-75 mt-3 max-w-[62ch]">{sub}</p>}
-    </header>
+    <>
+      <h1 className="sr-only">{titulo}</h1>
+      {sub && (
+        <header className={`${COR[cor]} rounded-[var(--radius)] px-6 sm:px-8 py-5 mb-3`}>
+          <p className="prosa opacity-75 max-w-[68ch]">{sub}</p>
+        </header>
+      )}
+    </>
   );
 }

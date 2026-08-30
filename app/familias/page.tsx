@@ -11,7 +11,7 @@ export default function Familias() {
   const dados = familiasComSinal();
 
   return (
-    <div className="max-w-[980px] space-y-3">
+    <div className="space-y-3">
       <Cabecalho titulo="Famílias que deram sinal"
         sub="Quem já disse alguma coisa — ou quem parou de dizer. Cada linha traz a frase que a família escreveu, com a data." />
 

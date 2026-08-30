@@ -24,7 +24,7 @@ const BLOCOS: [string, string][] = [
 
 export default function ComoFunciona() {
   return (
-    <div className="max-w-[860px]">
+    <div>
       <Cabecalho titulo="Como a Pulso decide"
         sub="Você não precisa saber disto para usar. Está aqui para quando você quiser conferir." />
       <div className="space-y-7">

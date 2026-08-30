@@ -18,7 +18,7 @@ export function Anel({
             cx={tamanho / 2 + Math.cos(a) * r}
             cy={tamanho / 2 + Math.sin(a) * r}
             fill={i < preenchidos ? "var(--coral)" : "currentColor"}
-            opacity={i < preenchidos ? 1 : 0.22} />
+            opacity={i < preenchidos ? 1 : 0.32} />
         );
       })}
     </svg>

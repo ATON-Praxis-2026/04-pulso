@@ -11,7 +11,7 @@ export default function Contexto() {
   const titulos = new Map(movimentos().map((m) => [m.chave, m.titulo]));
 
   return (
-    <div className="max-w-[860px] space-y-3">
+    <div className="space-y-3">
       <Cabecalho titulo="O que o Pulso sabe sobre a escola"
         sub="É isto que faz o agente analisar esta escola, e não “uma escola”. Sem este contexto ele sugeriria o genérico." />
 

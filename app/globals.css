@@ -11,8 +11,9 @@
    A cor não decora: ela diz o que o cartão é.
    ───────────────────────────────────────────────────────────────────── */
 :root {
-  --preto:       #0d0d0d;   /* o fundo, e os vãos entre os cartões */
-  --creme:       #f5f1e8;   /* superfície padrão */
+  --branco:      #ffffff;   /* o fundo, e os vãos entre os cartões */
+  --preto:       #0d0d0d;   /* só onde precisa de peso */
+  --creme:       #f1ede2;   /* superfície padrão — um tom abaixo do branco */
   --coral-claro: #f5c0a8;   /* algo que pede atenção, sem gritar */
   --coral:       #f4633a;   /* o que não espera — usar pouco */
   --azul:        #c5d0e6;   /* o que se corrige */
@@ -24,8 +25,8 @@
 
   --radius: 1.25rem;
 
-  --background:           var(--preto);
-  --foreground:           var(--creme);
+  --background:           var(--branco);
+  --foreground:           var(--tinta);
   --card:                 var(--creme);
   --card-foreground:      var(--tinta);
   --popover:              var(--creme);
@@ -34,9 +35,9 @@
   --primary-foreground:   var(--tinta);
   --secondary:            var(--coral-claro);
   --secondary-foreground: var(--tinta);
-  --muted:                #e8e2d5;
+  --muted:                #e6e0d2;
   --muted-foreground:     var(--tinta-2);
-  --accent:               #e8e2d5;
+  --accent:               #e6e0d2;
   --accent-foreground:    var(--tinta);
   --destructive:          var(--coral);
   --border:               var(--regua);
