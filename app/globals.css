@@ -4,63 +4,52 @@
 
 
 
+
 /* ─────────────────────────────────────────────────────────────────────
-   Sistema visual da Interea
-   Derivado da referência editorial: fundo oliva, painel de papel, cartão
-   branco. Serifada de livro nos títulos, mono em caixa alta nos rótulos.
-   Uma superfície só — sem modo escuro. A cena de uso é um corredor de
-   escola de dia, não um editor de código à noite.
+   Sistema visual do Pulso
+   Blocos de cor sólida sobre preto, raio generoso, mono como voz principal.
+   A cor não decora: ela diz o que o cartão é.
    ───────────────────────────────────────────────────────────────────── */
 :root {
-  /* Moldura */
-  --oliva:        #363b1d;
-  --oliva-fundo:  #2c3017;
-  --oliva-clara:  #4a5029;
+  --preto:       #0d0d0d;   /* o fundo, e os vãos entre os cartões */
+  --creme:       #f5f1e8;   /* superfície padrão */
+  --coral-claro: #f5c0a8;   /* algo que pede atenção, sem gritar */
+  --coral:       #f4633a;   /* o que não espera — usar pouco */
+  --azul:        #c5d0e6;   /* o que se corrige */
+  --verde-claro: #c8e6a0;   /* o que está bom, e o que volta */
+  --verde:       #4e7a5c;   /* profundidade */
+  --tinta:       #181613;
+  --tinta-2:     #6b665c;
+  --regua:       #ddd8cb;
 
-  /* Superfícies */
-  --papel:        #f2f1ea;   /* fundo do conteúdo */
-  --papel-2:      #e2e1d9;   /* painel secundário, blocos de gráfico */
-  --branco:       #ffffff;   /* cartão */
+  --radius: 1.25rem;
 
-  /* Tinta */
-  --tinta:        #17150f;
-  --tinta-2:      #57544b;
-  --regua:        #d7d5cb;
-
-  /* Etiquetas — sólidas, pequenas, saturadas */
-  --terracota:    #94512c;
-  --azul:         #8fbcdd;
-  --ocre:         #d9a62c;
-  --verde:        #4f7f36;
-
-  /* Tokens que os componentes já usam */
-  --radius:                 0.375rem;
-  --background:             var(--papel);
-  --foreground:             var(--tinta);
-  --card:                   var(--branco);
-  --card-foreground:        var(--tinta);
-  --popover:                var(--branco);
-  --popover-foreground:     var(--tinta);
-  --primary:                var(--oliva);
-  --primary-foreground:     var(--branco);
-  --secondary:              var(--papel-2);
-  --secondary-foreground:   var(--tinta);
-  --muted:                  var(--papel-2);
-  --muted-foreground:       var(--tinta-2);
-  --accent:                 var(--papel-2);
-  --accent-foreground:      var(--tinta);
-  --destructive:            var(--terracota);
-  --border:                 var(--regua);
-  --input:                  var(--regua);
-  --ring:                   var(--oliva);
+  --background:           var(--preto);
+  --foreground:           var(--creme);
+  --card:                 var(--creme);
+  --card-foreground:      var(--tinta);
+  --popover:              var(--creme);
+  --popover-foreground:   var(--tinta);
+  --primary:              var(--coral);
+  --primary-foreground:   var(--tinta);
+  --secondary:            var(--coral-claro);
+  --secondary-foreground: var(--tinta);
+  --muted:                #e8e2d5;
+  --muted-foreground:     var(--tinta-2);
+  --accent:               #e8e2d5;
+  --accent-foreground:    var(--tinta);
+  --destructive:          var(--coral);
+  --border:               var(--regua);
+  --input:                var(--regua);
+  --ring:                 var(--coral);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Newsreader", Georgia, "Times New Roman", serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-heading: "Newsreader", Georgia, serif;
+  --font-sans: "Space Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-heading: "Space Mono", ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -123,17 +112,20 @@
 }
 
 @layer base {
-  body { font-feature-settings: "kern" 1, "liga" 1; }
-
-  /* Rótulo do sistema: mono, caixa alta, espaçado. Vem direto da referência
-     — `MINDSET`, `NATURAL LANGUAGE`. É o que etiqueta, nunca o que narra. */
+  /* O rótulo do sistema: mono, caixa alta, bem espaçado. É o que etiqueta,
+     nunca o que narra. */
   .rotulo {
-    font-family: var(--font-mono);
+    font-family: "Space Mono", ui-monospace, monospace;
     font-size: 0.6875rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--tinta-2);
   }
-
-  ::selection { background: var(--ocre); color: var(--tinta); }
+  /* Prosa longa fica na serifada — mono em parágrafo cansa a vista. */
+  .prosa {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  ::selection { background: var(--coral); color: var(--tinta); }
 }

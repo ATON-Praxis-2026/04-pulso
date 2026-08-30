@@ -14,11 +14,11 @@ export function Anel({
       {Array.from({ length: pontos }, (_, i) => {
         const a = (i / pontos) * Math.PI * 2 - Math.PI / 2;
         return (
-          <circle key={i} r={1.8}
+          <circle key={i} r={2.4}
             cx={tamanho / 2 + Math.cos(a) * r}
             cy={tamanho / 2 + Math.sin(a) * r}
-            fill={i < preenchidos ? "var(--verde)" : "var(--oliva)"}
-            opacity={i < preenchidos ? 1 : 0.28} />
+            fill={i < preenchidos ? "var(--coral)" : "currentColor"}
+            opacity={i < preenchidos ? 1 : 0.22} />
         );
       })}
     </svg>

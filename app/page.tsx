@@ -45,11 +45,11 @@ export default function Semana() {
   const msg = mensagemEnviada();
 
   return (
-    <div className="max-w-[820px] space-y-10">
-      <header className="flex items-start gap-6">
+    <div className="space-y-3 max-w-[900px]">
+      <header className="bg-[var(--creme)] text-[var(--tinta)] rounded-[var(--radius)]
+        px-6 sm:px-8 py-8 flex items-start gap-6">
         <div className="flex-1 min-w-0">
-          <h1 className="font-[family-name:var(--font-newsreader)] text-[42px] sm:text-[52px]
-            leading-[1.05] tracking-[-0.02em]">
+          <h1 className="text-[38px] sm:text-[46px] leading-[1.02] tracking-[-0.04em] font-bold">
             Bom dia, {CONFIG.gestor}.
           </h1>
           {/* O relógio do produto: a data que já existe na vida dele. */}
@@ -66,11 +66,13 @@ export default function Semana() {
       </header>
 
       {bons.length > 0 && (
-        <section className="border-t border-border">
+        <section className="bg-[var(--verde-claro)] text-[var(--tinta)]
+          rounded-[var(--radius)] px-6 sm:px-8 py-2">
           {bons.map((b) => (
-            <p key={b} className="flex gap-3 py-2.5 border-b border-border text-[17px]">
-              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden className="shrink-0 mt-[6px]">
-                <path d="M2 7.5 L5.5 11 L12 3.5" fill="none" stroke="var(--verde)"
+            <p key={b} className="flex gap-3 py-3.5 border-b border-[var(--tinta)]/12
+              last:border-0 prosa">
+              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden className="shrink-0 mt-[7px]">
+                <path d="M2 7.5 L5.5 11 L12 3.5" fill="none" stroke="var(--tinta)"
                   strokeWidth="2" strokeLinecap="square" />
               </svg>
               <span>{b}</span>
@@ -79,46 +81,47 @@ export default function Semana() {
         </section>
       )}
 
-      <details className="group border-t border-b border-border">
-        <summary className="flex items-center gap-3 py-3 cursor-pointer list-none
-          hover:text-muted-foreground transition-colors">
-          <span className="size-1.5 rounded-full bg-[var(--verde)] shrink-0" aria-hidden />
+      <details className="group bg-[var(--creme)] text-[var(--tinta)] rounded-[var(--radius)] px-6 sm:px-8">
+        <summary className="flex items-center gap-3 py-5 cursor-pointer list-none
+          hover:opacity-70 transition-opacity">
+          <span className="size-2 rounded-full bg-[var(--coral)] shrink-0" aria-hidden />
           <span className="rotulo">enviado no seu whatsapp hoje às 9h</span>
           <span className="rotulo ml-auto group-open:hidden">ver a mensagem</span>
           <span className="rotulo ml-auto hidden group-open:inline">fechar</span>
         </summary>
         <div className="pb-5 space-y-4">
-          <pre className="bg-[var(--papel-2)] p-5 text-[15px] leading-relaxed whitespace-pre-wrap
-            font-[family-name:var(--font-newsreader)] max-w-[52ch]">{msg}</pre>
+          <pre className="bg-[var(--muted)] rounded-2xl p-6 text-[14px] leading-relaxed
+            whitespace-pre-wrap max-w-[56ch]">{msg}</pre>
           <Copiar texto={msg} rotulo="Copiar a mensagem" />
         </div>
       </details>
 
       {abertos.length === 0 ? (
-        <section className="bg-card p-10 sm:p-14 text-center">
+        <section className="bg-[var(--verde-claro)] text-[var(--tinta)]
+          rounded-[var(--radius)] p-10 sm:p-16 text-center">
           <div className="flex justify-center mb-5"><Anel total={6} cheios={0} tamanho={72} /></div>
-          <p className="font-[family-name:var(--font-newsreader)] text-2xl">
+          <p className="text-[28px] tracking-[-0.03em] font-bold">
             Nada exige decisão sua esta semana.
           </p>
-          <p className="text-muted-foreground mt-2 max-w-sm mx-auto">
+          <p className="prosa opacity-75 mt-3 max-w-sm mx-auto">
             Nenhuma família ficou sem resposta e nenhum assunto se repetiu o bastante.
             É uma boa notícia.
           </p>
         </section>
       ) : (
-        <section className="space-y-4">
-          <h2 className="rotulo">
+        <section className="space-y-3">
+          <h2 className="rotulo !text-[var(--creme)]/60 px-2 pt-3">
             {abertos.length === 1 ? "1 decisão para você" : `${abertos.length} decisões para você`}
             {agora.length > 0 && (
               <span className="!text-[#7a2f2f]"> · {agora.length} não {agora.length === 1 ? "esperou" : "esperaram"} segunda</span>
             )}
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {[...agora, ...naSemana].slice(0, 3).map((m) => <MovimentoCard key={m.chave} m={m} />)}
           </div>
           {abertos.length > 3 && (
-            <Link href="/decisoes" className="inline-block text-[17px] underline underline-offset-4
-              decoration-[var(--regua)] hover:decoration-current">
+            <Link href="/decisoes" className="inline-block rotulo !text-[var(--creme)]/70
+              hover:!text-[var(--creme)] underline underline-offset-4 px-2 py-2">
               ver as outras {abertos.length - 3}
             </Link>
           )}
@@ -126,16 +129,15 @@ export default function Semana() {
       )}
 
       {resolvidos.length > 0 && (
-        <p className="rotulo">
-          <Link href="/decisoes" className="hover:text-foreground underline underline-offset-4
-            decoration-[var(--regua)]">
+        <p className="rotulo !text-[var(--creme)]/60 px-2">
+          <Link href="/decisoes" className="hover:!text-[var(--creme)] underline underline-offset-4">
             você já fechou {resolvidos.length} no quadro →
           </Link>
         </p>
       )}
 
-      <Link href="/numeros" className="inline-block rotulo hover:text-foreground
-        underline underline-offset-4 decoration-[var(--regua)]">
+      <Link href="/numeros" className="inline-block rotulo !text-[var(--creme)]/70
+        hover:!text-[var(--creme)] underline underline-offset-4 px-2 py-3">
         ver os números →
       </Link>
     </div>

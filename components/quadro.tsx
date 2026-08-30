@@ -40,7 +40,7 @@ function Cartao({ m }: { m: Movimento }) {
     });
 
   return (
-    <article className="bg-card p-5 space-y-3">
+    <article className="bg-[var(--creme)] text-[var(--tinta)] rounded-[var(--radius)] p-5 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
         <span className="rotulo !text-[0.625rem] px-1.5 py-[3px] leading-none"
           style={{ background: t.fundo, color: t.tinta }}>{t.nome}</span>
@@ -64,7 +64,7 @@ function Cartao({ m }: { m: Movimento }) {
       )}
 
       {m.oQueFiz && (
-        <div className="bg-[var(--papel-2)] p-3.5">
+        <div className="bg-[var(--muted)] p-3.5">
           <p className="rotulo mb-1.5">o que você fez</p>
           <p className="text-[15px] leading-relaxed">{m.oQueFiz}</p>
         </div>
@@ -91,7 +91,7 @@ function Cartao({ m }: { m: Movimento }) {
           <textarea id={`fiz-${m.chave}`} rows={3} value={texto}
             onChange={(e) => setTexto(e.target.value)}
             placeholder="Ex.: conversei com a coordenação e mudamos o aviso para a 5ª semana"
-            className="w-full bg-[var(--papel-2)] border border-border p-3 text-[15px]
+            className="w-full bg-[var(--muted)] border border-[var(--tinta)]/12 p-3 text-[15px]
               leading-relaxed placeholder:text-muted-foreground" />
           <div className="flex gap-2">
             <button type="button" disabled={pendente} onClick={() => mover("feito", texto)}
@@ -107,7 +107,7 @@ function Cartao({ m }: { m: Movimento }) {
           </div>
         </div>
       ) : (
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--tinta)]/12">
           {m.copiar && <Copiar texto={m.copiar.texto} rotulo={m.copiar.rotulo} />}
           {m.estado === "decidir" && (
             <button type="button" disabled={pendente} onClick={() => mover("fazendo")}
@@ -125,13 +125,13 @@ function Cartao({ m }: { m: Movimento }) {
           )}
           {m.estado === "feito" && (
             <button type="button" disabled={pendente} onClick={() => mover("decidir")}
-              className="rotulo hover:text-foreground underline underline-offset-4
+              className="rotulo hover:opacity-100 underline underline-offset-4
                 decoration-[var(--regua)]">
               reabrir
             </button>
           )}
           {m.href && (
-            <Link href={m.href} className="rotulo hover:text-foreground ml-1
+            <Link href={m.href} className="rotulo hover:opacity-100 ml-1
               underline underline-offset-4 decoration-[var(--regua)]">
               ver a evidência
             </Link>
@@ -149,7 +149,7 @@ export function Quadro({ movimentos }: { movimentos: Movimento[] }) {
         const cartoes = movimentos.filter((m) => (m.estado ?? "decidir") === estado);
         return (
           <section key={estado} className="space-y-3">
-            <header className="pb-2 border-b border-border">
+            <header className="pb-2 border-b border-[var(--tinta)]/12">
               <h2 className="font-[family-name:var(--font-newsreader)] text-xl">
                 {titulo} <span className="font-mono text-sm">{cartoes.length}</span>
               </h2>

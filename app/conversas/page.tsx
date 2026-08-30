@@ -33,7 +33,7 @@ export default async function Conversas({
   const chip = (ativo: boolean) =>
     `text-sm rounded-md px-3 py-1.5 min-h-9 inline-flex items-center border transition-colors ${
       ativo ? "border-foreground/40 bg-accent text-accent-foreground"
-            : "border-border text-muted-foreground hover:text-foreground"}`;
+            : "border-[var(--tinta)]/12 text-muted-foreground hover:opacity-100"}`;
 
   return (
     <div>
@@ -43,11 +43,11 @@ export default async function Conversas({
       <form className="flex flex-wrap gap-2 mb-4" action="/conversas">
         <input name="q" defaultValue={sp.q ?? ""} aria-label="Buscar por nome ou trecho da conversa"
           placeholder="buscar por nome ou trecho…"
-          className="flex-1 min-w-[220px] rounded-md border border-border bg-card px-3 py-2 text-sm
+          className="flex-1 min-w-[220px] rounded-md border border-[var(--tinta)]/12 bg-[var(--creme)] text-[var(--tinta)] px-3 py-2 text-sm
                      placeholder:text-muted-foreground focus:border-foreground/40" />
         {sp.tema && <input type="hidden" name="tema" value={sp.tema} />}
         {sp.tipo && <input type="hidden" name="tipo" value={sp.tipo} />}
-        <button className="rounded-md border border-border px-4 py-2 text-sm hover:bg-accent transition-colors">
+        <button className="rounded-md border border-[var(--tinta)]/12 px-4 py-2 text-sm hover:bg-accent transition-colors">
           buscar
         </button>
       </form>
@@ -67,8 +67,8 @@ export default async function Conversas({
         ))}
       </div>
 
-      <div className="border border-border rounded-lg overflow-hidden bg-card">
-        <div className="px-4 py-2.5 border-b border-border flex items-center gap-3">
+      <div className="border border-[var(--tinta)]/12 rounded-lg overflow-hidden bg-[var(--creme)] text-[var(--tinta)]">
+        <div className="px-4 py-2.5 border-b border-[var(--tinta)]/12 flex items-center gap-3">
           <p className="text-xs text-muted-foreground">
             {linhas.length} conversa{linhas.length === 1 ? "" : "s"}
             {linhas.length === 60 && " (mostrando as 60 mais recentes)"}
@@ -106,7 +106,7 @@ export default async function Conversas({
           <div className="p-10 text-center space-y-2">
             <p className="text-muted-foreground">Nenhuma conversa com esse filtro.</p>
             <Link href="/conversas"
-              className="inline-block text-sm underline underline-offset-4 hover:text-foreground">
+              className="inline-block text-sm underline underline-offset-4 hover:opacity-100">
               limpar os filtros
             </Link>
           </div>

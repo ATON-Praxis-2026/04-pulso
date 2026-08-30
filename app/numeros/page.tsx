@@ -24,11 +24,11 @@ export default function Numeros() {
         <Tile valor={k.conversasMes} rotulo="conversas no mês"
           nota={`${numero(k.mensagens)} mensagens lidas`} />
         <Tile valor={`${k.evitavelPct}%`} rotulo="não precisava chegar"
-          nota={`${k.evitaveis} contatos`} tom={k.evitavelPct > 40 ? "alerta" : "normal"} />
+          nota={`${k.evitaveis} contatos`} cor={k.evitavelPct > 40 ? "coral" : "creme"} />
         <Tile valor={`${k.primeiraResposta}h`} rotulo="até a primeira resposta"
           nota="contando só horas de expediente" />
         <Tile valor={k.comSinal} rotulo="famílias com sinal aberto"
-          href="/familias" tom={k.comSinal > 0 ? "alerta" : "bom"}
+          href="/familias" cor={k.comSinal > 0 ? "coralClaro" : "verdeClaro"}
           nota={`${semSerRespondidas()} conversas sem resposta nenhuma`} />
       </div>
 
@@ -39,7 +39,7 @@ export default function Numeros() {
 
       <div className="grid lg:grid-cols-2 gap-6">
         <Painel titulo="O que mais dói" sub="temas do mês"
-          acao={<a href="/temas" className="text-sm text-muted-foreground hover:text-foreground">ver todos</a>}>
+          acao={<a href="/temas" className="text-sm text-muted-foreground hover:opacity-100">ver todos</a>}>
           <BarrasH dados={ts.map((t, i) => ({
             label: t.label, valor: t.n, destaque: i === 0,
             extra: t.variacao ? `${t.variacao > 0 ? "+" : ""}${t.variacao}` : undefined,
@@ -58,7 +58,7 @@ export default function Numeros() {
 
       <Painel titulo="Onde a operação trava"
         sub={`Tempo até a primeira resposta, em horas de expediente. Média de ${k.primeiraResposta}h.`}
-        acao={<a href="/operacao" className="text-sm text-muted-foreground hover:text-foreground">detalhar</a>}>
+        acao={<a href="/operacao" className="text-sm text-muted-foreground hover:opacity-100">detalhar</a>}>
         <div className="max-w-sm">
           <BarrasV dados={dias.map((d) => ({ label: d.dia, valor: d.horas, n: d.n }))}
             alerta={(dias.reduce((a, b) => a + b.horas, 0) / (dias.length || 1)) * 1.5} />

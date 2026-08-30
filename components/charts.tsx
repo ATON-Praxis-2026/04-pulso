@@ -22,7 +22,7 @@ function Tip({ x, y, children }: { x: number; y: number; children: React.ReactNo
   return (
     <foreignObject x={Math.max(0, x - 70)} y={Math.max(0, y - 62)} width={160} height={60}
       style={{ overflow: "visible", pointerEvents: "none" }}>
-      <div className="rounded-md border border-border bg-popover px-2.5 py-1.5 text-[11px] leading-snug shadow-lg whitespace-nowrap inline-block">
+      <div className="rounded-md border border-[var(--tinta)]/12 bg-popover px-2.5 py-1.5 text-[11px] leading-snug shadow-lg whitespace-nowrap inline-block">
         {children}
       </div>
     </foreignObject>

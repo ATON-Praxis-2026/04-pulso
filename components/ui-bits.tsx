@@ -1,56 +1,60 @@
 import Link from "next/link";
 
+/** A cor diz o que o bloco é. Não decora. */
+export const COR = {
+  creme: "bg-[var(--creme)] text-[var(--tinta)]",
+  coral: "bg-[var(--coral)] text-[var(--tinta)]",
+  coralClaro: "bg-[var(--coral-claro)] text-[var(--tinta)]",
+  azul: "bg-[var(--azul)] text-[var(--tinta)]",
+  verdeClaro: "bg-[var(--verde-claro)] text-[var(--tinta)]",
+  verde: "bg-[var(--verde)] text-white",
+  tinta: "bg-[var(--tinta)] text-[var(--creme)]",
+} as const;
+export type Cor = keyof typeof COR;
+
 export function Tile({
-  valor, rotulo, nota, tom = "normal", href,
-}: {
-  valor: string | number; rotulo: string; nota?: string;
-  tom?: "normal" | "alerta" | "bom"; href?: string;
-}) {
-  const cor = tom === "alerta" ? "text-[var(--terracota)]"
-            : tom === "bom" ? "text-[var(--verde)]" : "";
+  valor, rotulo, nota, cor = "creme", href,
+}: { valor: string | number; rotulo: string; nota?: string; cor?: Cor; href?: string }) {
   const corpo = (
     <>
-      <p className={`font-mono text-[28px] leading-none tabular-nums ${cor}`}>{valor}</p>
-      <p className="text-[15px] mt-3">{rotulo}</p>
-      {nota && <p className="rotulo mt-1">{nota}</p>}
+      <p className="text-[30px] leading-none tabular-nums font-bold tracking-[-0.03em]">{valor}</p>
+      <p className="text-sm mt-3">{rotulo}</p>
+      {nota && <p className="rotulo mt-1.5 opacity-70">{nota}</p>}
     </>
   );
-  const cls = "bg-card p-5";
+  const cls = `${COR[cor]} rounded-[var(--radius)] p-6`;
   return href
-    ? <Link href={href} className={`${cls} block transition-colors hover:bg-[var(--papel-2)]`}>{corpo}</Link>
+    ? <Link href={href} className={`${cls} block transition-opacity hover:opacity-90`}>{corpo}</Link>
     : <div className={cls}>{corpo}</div>;
 }
 
 export function Painel({
-  titulo, sub, acao, children, className = "",
+  titulo, sub, acao, cor = "creme", children, className = "",
 }: {
-  titulo: string; sub?: string; acao?: React.ReactNode;
+  titulo: string; sub?: string; acao?: React.ReactNode; cor?: Cor;
   children: React.ReactNode; className?: string;
 }) {
   return (
-    <section className={`bg-card ${className}`}>
-      <header className="flex items-baseline gap-4 px-6 pt-6 pb-5">
+    <section className={`${COR[cor]} rounded-[var(--radius)] p-6 sm:p-7 ${className}`}>
+      <header className="flex items-baseline gap-4 mb-5">
         <div className="min-w-0">
-          <h2 className="font-[family-name:var(--font-newsreader)] text-[22px] leading-tight">
-            {titulo}
-          </h2>
-          {sub && <p className="text-[15px] text-muted-foreground mt-1 max-w-[58ch]">{sub}</p>}
+          <h2 className="text-[19px] font-bold tracking-[-0.02em] leading-tight">{titulo}</h2>
+          {sub && <p className="prosa !text-[15px] opacity-70 mt-1.5 max-w-[58ch]">{sub}</p>}
         </div>
         {acao && <div className="ml-auto shrink-0">{acao}</div>}
       </header>
-      <div className="px-6 pb-6">{children}</div>
+      {children}
     </section>
   );
 }
 
-export function Cabecalho({ titulo, sub }: { titulo: string; sub?: string }) {
+export function Cabecalho({ titulo, sub, cor = "creme" }: { titulo: string; sub?: string; cor?: Cor }) {
   return (
-    <header className="mb-8">
-      <h1 className="font-[family-name:var(--font-newsreader)] text-[38px] leading-[1.1]
-        tracking-[-0.02em]">
+    <header className={`${COR[cor]} rounded-[var(--radius)] px-6 sm:px-8 py-7 sm:py-8 mb-3`}>
+      <h1 className="text-[30px] sm:text-[36px] leading-[1.08] tracking-[-0.035em] font-bold">
         {titulo}
       </h1>
-      {sub && <p className="text-[17px] text-muted-foreground mt-2 max-w-[62ch]">{sub}</p>}
+      {sub && <p className="prosa opacity-75 mt-3 max-w-[62ch]">{sub}</p>}
     </header>
   );
 }

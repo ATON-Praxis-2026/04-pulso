@@ -2,8 +2,9 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
-/** Copiar é o único caminho entre "decidi" e "aconteceu".
- *  Sem isto, a alternativa é arrastar as alças de seleção dentro de uma div. */
+const BASE = "inline-flex items-center gap-1.5 px-5 py-2.5 text-sm min-h-11 rounded-full transition-opacity";
+
+/** Copiar é o único caminho entre "decidi" e "aconteceu". */
 export function Copiar({
   texto, rotulo = "Copiar", className = "",
 }: { texto: string; rotulo?: string; className?: string }) {
@@ -12,10 +13,8 @@ export function Copiar({
     <button
       type="button"
       onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(texto);
-        } catch {
-          // Navegador sem permissão de clipboard: seleciona para o usuário copiar.
+        try { await navigator.clipboard.writeText(texto); }
+        catch {
           const el = document.createElement("textarea");
           el.value = texto; document.body.appendChild(el);
           el.select(); document.execCommand("copy"); el.remove();
@@ -24,9 +23,7 @@ export function Copiar({
         setTimeout(() => setFeito(false), 2000);
       }}
       aria-live="polite"
-      className={`inline-flex items-center gap-1.5 px-4 py-2 text-[15px] min-h-10
-        border border-[var(--tinta)] bg-[var(--tinta)] text-white
-        transition-colors hover:bg-[var(--oliva)] hover:border-[var(--oliva)] ${className}`}
+      className={`${BASE} bg-[var(--tinta)] text-[var(--creme)] hover:opacity-85 ${className}`}
     >
       {feito ? "Copiado ✓" : rotulo}
     </button>
@@ -37,23 +34,16 @@ export function Resolver({ chave, resolvido }: { chave: string; resolvido: boole
   const [pendente, iniciar] = useTransition();
   const router = useRouter();
   return (
-    <button
-      type="button"
-      disabled={pendente}
+    <button type="button" disabled={pendente}
       onClick={() =>
         iniciar(async () => {
           await fetch("/api/resolver", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
+            method: "POST", headers: { "content-type": "application/json" },
             body: JSON.stringify({ chave, desfazer: resolvido }),
           });
           router.refresh();
-        })
-      }
-      className="inline-flex items-center gap-1.5 px-4 py-2 text-[15px] min-h-10
-        border border-[var(--regua)] bg-transparent
-        transition-colors hover:border-[var(--tinta)] disabled:opacity-50"
-    >
+        })}
+      className={`${BASE} border border-[var(--tinta)]/25 hover:border-[var(--tinta)] disabled:opacity-50`}>
       {resolvido ? "Reabrir" : "Já resolvi"}
     </button>
   );

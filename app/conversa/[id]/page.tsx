@@ -26,7 +26,7 @@ export default async function Conversa({ params }: { params: Promise<{ id: strin
   return (
     <div>
       <Link href="/conversas"
-        className="text-sm text-muted-foreground hover:text-foreground mb-4 inline-block">
+        className="text-sm text-muted-foreground hover:opacity-100 mb-4 inline-block">
         ← conversas
       </Link>
 
@@ -39,7 +39,7 @@ export default async function Conversa({ params }: { params: Promise<{ id: strin
       </header>
 
       <div className="grid lg:grid-cols-[1fr_340px] gap-6 items-start">
-        <div className="border border-border rounded-lg bg-card p-5 space-y-2">
+        <div className="border border-[var(--tinta)]/12 rounded-[var(--radius)] bg-[var(--creme)] text-[var(--tinta)] p-5 space-y-2">
           {c.mensagens.map((m, i) => (
             <div key={i} className={m.direcao === "entrada" ? "" : "flex justify-end"}>
               <div className={`max-w-[80%] rounded-xl px-3.5 py-2.5 text-sm ${
@@ -62,7 +62,7 @@ export default async function Conversa({ params }: { params: Promise<{ id: strin
                 {c.sinais.map((s) => (
                   <li key={s.tipo}>
                     <p className="text-sm font-medium">{CONFIG.sinaisLabel[s.tipo] ?? s.tipo}</p>
-                    <p className="text-sm text-muted-foreground border-l-2 border-border pl-3 mt-1 italic">
+                    <p className="text-sm text-muted-foreground border-l-2 border-[var(--tinta)]/12 pl-3 mt-1 italic">
                       “{s.evidencia}”
                     </p>
                   </li>
@@ -89,7 +89,7 @@ export default async function Conversa({ params }: { params: Promise<{ id: strin
                   ["Precisava existir?", a.evitavel ? "não — era evitável" : "sim"],
                   ["Intenção de matrícula", a.intencao_matricula ? "sim" : "não"],
                 ] as [string, unknown][]).map(([k, v]) => (
-                  <div key={k} className="flex justify-between gap-4 border-t border-border pt-2">
+                  <div key={k} className="flex justify-between gap-4 border-t border-[var(--tinta)]/12 pt-2">
                     <dt className="text-muted-foreground">{k}</dt>
                     <dd className="text-right">{String(v ?? "—")}</dd>
                   </div>
@@ -101,7 +101,7 @@ export default async function Conversa({ params }: { params: Promise<{ id: strin
           {a?.mensagem_sugerida ? (
             <Painel titulo="Rascunho para a secretaria">
               <p className="text-sm leading-relaxed">{String(a.mensagem_sugerida)}</p>
-              <p className="text-xs text-muted-foreground mt-3 pt-3 border-t border-border">
+              <p className="text-xs text-muted-foreground mt-3 pt-3 border-t border-[var(--tinta)]/12">
                 A Interea não envia. O gestor aprova, a secretaria copia e manda pelo número dela.
               </p>
             </Painel>

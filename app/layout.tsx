@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import Link from "next/link";
 import { Nav, NavMobile } from "@/components/nav";
 import { movimentos } from "@/lib/analytics";
 import { CONFIG, PRODUTO } from "@/lib/config";
 import "./globals.css";
 
-const serifada = Newsreader({
-  variable: "--font-newsreader", subsets: ["latin"],
-  weight: ["300", "400", "500", "600"], style: ["normal", "italic"],
-});
-const mono = IBM_Plex_Mono({
-  variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500"],
-});
 
 export const metadata: Metadata = {
   title: "Pulso",
@@ -24,43 +16,54 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   try { n = movimentos().filter((m) => m.estado !== "feito").length; } catch { /* npm run seed */ }
 
   return (
-    <html lang="pt-BR" className={`${serifada.variable} ${mono.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[var(--oliva-fundo)]">
-        <div className="flex min-h-screen">
-          {/* A moldura é oliva; o conteúdo é papel. Três superfícies, como na
-              referência: fundo → papel → cartão branco. */}
-          <aside className="w-56 shrink-0 hidden md:flex flex-col bg-[var(--oliva)] text-white/90">
-            <div className="h-16 flex items-center px-6">
-              <Link href="/" className="font-[family-name:var(--font-newsreader)] text-xl
-                text-white tracking-tight">
+    <html lang="pt-BR" className="h-full antialiased">
+      {/* Carregado direto do Google em vez de pelo pipeline do Next: o
+          `next/font` do Turbopack quebra a resolução do módulo interno, e a
+          fonte aqui é a identidade — não pode depender disso. */}
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Newsreader:ital,wght@0,300..500;1,400&display=swap" />
+      </head>
+      <body className="min-h-full bg-background text-[var(--creme)]">
+        <div className="flex min-h-screen gap-3 p-3">
+          {/* O preto é o vão entre os blocos, como na referência. */}
+          <aside className="w-60 shrink-0 hidden md:flex flex-col gap-3">
+            <div className="bg-[var(--coral)] rounded-[var(--radius)] px-6 py-5">
+              <Link href="/" className="text-[22px] tracking-[-0.02em] text-[var(--tinta)] font-bold">
                 {PRODUTO}
               </Link>
+              <p className="rotulo !text-[var(--tinta)]/65 mt-1">
+                {CONFIG.escola.toLowerCase()}
+              </p>
             </div>
-            <div className="px-3 flex-1"><Nav decisoes={n} /></div>
-            <div className="p-6 space-y-3 border-t border-white/10">
-              <div>
-                <p className="text-sm text-white">{CONFIG.escola}</p>
-                <p className="rotulo !text-white/55 mt-0.5">{CONFIG.gestor} · diretor</p>
-              </div>
-              <Link href="/como-funciona" className="block text-sm text-white/60 hover:text-white">
-                como o {PRODUTO} decide
-              </Link>
+
+            <div className="bg-[var(--creme)] rounded-[var(--radius)] p-3 flex-1">
+              <Nav decisoes={n} />
             </div>
+
+            <Link href="/como-funciona"
+              className="bg-[var(--verde)] rounded-[var(--radius)] px-6 py-4 block
+                transition-opacity hover:opacity-90">
+              <p className="rotulo !text-white/70">{CONFIG.gestor} · diretor</p>
+              <p className="text-white text-sm mt-1">como o {PRODUTO} decide →</p>
+            </Link>
           </aside>
 
-          <div className="flex-1 min-w-0 bg-background md:rounded-l-xl">
-            <header className="h-16 flex items-center px-5 sm:px-8 gap-4 border-b border-border">
-              <Link href="/" className="md:hidden font-[family-name:var(--font-newsreader)]
-                text-lg tracking-tight">
-                {PRODUTO}
-              </Link>
+          <div className="flex-1 min-w-0 flex flex-col gap-3">
+            <header className="bg-[var(--creme)] rounded-[var(--radius)] px-6 sm:px-8 h-16
+              flex items-center gap-4 shrink-0">
+              <Link href="/" className="md:hidden text-lg font-bold tracking-[-0.02em]
+                text-[var(--tinta)]">{PRODUTO}</Link>
               <span className="ml-auto rotulo flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-[var(--verde)]" aria-hidden />
+                <span className="size-2 rounded-full bg-[var(--coral)]" aria-hidden />
                 <span className="hidden sm:inline">lendo o whatsapp da secretaria</span>
                 <span className="sm:hidden">lendo</span>
               </span>
             </header>
-            <main className="px-5 sm:px-8 py-8 pb-24 md:pb-12 max-w-[1140px]">{children}</main>
+
+            <main className="flex-1 pb-24 md:pb-0">{children}</main>
           </div>
         </div>
         <NavMobile decisoes={n} />

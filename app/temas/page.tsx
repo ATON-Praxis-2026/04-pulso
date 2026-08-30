@@ -25,7 +25,7 @@ export default function Temas() {
           {txt ? (
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground leading-relaxed">{txt.diagnostico}</p>
-              <div className="rounded-md border border-border bg-muted/40 p-4">
+              <div className="rounded-md border border-[var(--tinta)]/12 bg-muted/40 p-4">
                 <p className="text-xs text-muted-foreground mb-2">
                   Texto pronto para publicar no site e no WhatsApp Business
                 </p>
@@ -60,7 +60,7 @@ export default function Temas() {
                 </p>
                 <ul className="space-y-1.5">
                   {d.falas.map((f) => (
-                    <li key={f} className="text-sm border-l-2 border-border pl-3 italic text-foreground/90">
+                    <li key={f} className="text-sm border-l-2 border-[var(--tinta)]/12 pl-3 italic text-[var(--tinta)]">
                       “{f}”
                     </li>
                   ))}

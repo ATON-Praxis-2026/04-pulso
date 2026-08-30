@@ -20,9 +20,9 @@ export default function Operacao() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <Tile valor={`${k.primeiraResposta}h`} rotulo="1ª resposta, média" nota="em horas úteis" />
-        <Tile valor={semSerRespondidas()} rotulo="nunca respondidas" tom="alerta" />
+        <Tile valor={semSerRespondidas()} rotulo="nunca respondidas" cor="coral" />
         <Tile valor={`${k.evitavelPct}%`} rotulo="do volume é evitável"
-          nota={`${k.evitaveis} contatos no mês`} tom={k.evitavelPct > 40 ? "alerta" : "normal"} />
+          nota={`${k.evitaveis} contatos no mês`} cor={k.evitavelPct > 40 ? "coral" : "creme"} />
         <Tile valor={CONFIG.expediente.abre + "h–" + CONFIG.expediente.fecha + "h"}
           rotulo="expediente" nota="base do cálculo de horas úteis" />
       </div>
@@ -32,7 +32,7 @@ export default function Operacao() {
           sub={`Tempo até a primeira resposta. Média geral de ${k.primeiraResposta}h úteis.`}>
           <BarrasV dados={dias.map((d) => ({ label: d.dia, valor: d.horas, n: d.n }))}
             alerta={media * 1.5} />
-          <p className="text-sm text-muted-foreground mt-4 pt-4 border-t border-border">
+          <p className="text-sm text-muted-foreground mt-4 pt-4 border-t border-[var(--tinta)]/12">
             Contamos só horas de expediente. Sexta 18h → segunda 9h são 63 horas corridas
             sem que ninguém tenha errado.
           </p>
@@ -51,7 +51,7 @@ export default function Operacao() {
             label: CONFIG.temasLabel[e.tema] ?? e.tema,
             valor: e.evit, destaque: i === 0, extra: `${e.pct}% de ${e.n}`,
           }))} />
-        <p className="text-sm text-muted-foreground mt-5 pt-4 border-t border-border">
+        <p className="text-sm text-muted-foreground mt-5 pt-4 border-t border-[var(--tinta)]/12">
           Corrigir o texto que gera {evit[0]?.evit ?? 0} perguntas é o único movimento que
           diminui trabalho no mês seguinte em vez de aumentar.
         </p>

@@ -15,14 +15,14 @@ export default function Decisoes() {
         sub="O que só você pode decidir. Ao fechar um cartão, conte o que fez — é assim que o Pulso aprende o jeito desta escola." />
 
       {mov.length === 0 ? (
-        <p className="bg-card p-10 text-center text-muted-foreground">
+        <p className="bg-[var(--creme)] text-[var(--tinta)] rounded-[var(--radius)] p-10 text-center text-muted-foreground">
           Nenhum padrão cruzou o limiar esta semana. Nada exige decisão sua.
         </p>
       ) : (
         <Quadro movimentos={mov} />
       )}
 
-      <p className="mt-10 pt-5 border-t border-border max-w-2xl text-[15px] text-muted-foreground">
+      <p className="mt-10 pt-5 border-t border-[var(--tinta)]/12 max-w-2xl text-[15px] text-muted-foreground">
         {feitas > 0
           ? `${feitas} ${feitas === 1 ? "decisão fechada alimenta" : "decisões fechadas alimentam"} o contexto que o Pulso usa nas próximas análises. `
           : "Cada decisão fechada com um registro do que foi feito alimenta o contexto das próximas análises. "}
